@@ -9,23 +9,23 @@
 
 namespace myapp {
 
-class MyApp : public cinder::app::App {
-public:
-  MyApp();
-  void setup() override;
-  void update() override;
-  void draw() override;
-  void keyDown(cinder::app::KeyEvent) override;
-  void keyUp(cinder::app::KeyEvent) override;
+  class MyApp : public cinder::app::App {
+  public:
+    MyApp();
+    void setup() override;
+    void update() override;
+    void draw() override;
+    void keyDown(cinder::app::KeyEvent) override;
+    void keyUp(cinder::app::KeyEvent) override;
 
-  void DrawBodies();
-  void CreateRect(double x, double y, double h, double w, double angle);
-  void CreateBoundaries();
-  b2Body* CreatePlayer(double x, double y, double h, double w, double angle);
-private:
-  b2World* game_world;
-  b2Body* player;
-};
+    void DrawBodies();
+    void CreateRect(double x, double y, double h, double w, double angle);
+    void CreateBoundaries();
+    b2Body* CreatePlayer(double x, double y, double h, double w, double angle);
+  private:
+    b2World* game_world;
+    b2Body* player;
+  };
 
 }  // namespace myapp
 

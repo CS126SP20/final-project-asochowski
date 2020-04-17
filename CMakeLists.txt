@@ -33,7 +33,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Allow code coverage.
 if("{CMAKE_C_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang"
-    OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
+        OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
     message("Building with llvm Code Coverage Tools")
     set(CMAKE_CXX_FLAGS "-fprofile-instr-generate -fcoverage-mapping")
 elseif(CMAKE_COMPILER_IS_GNUCXX)
@@ -72,9 +72,9 @@ add_subdirectory(tests)
 
 # Testing library. Header-only.
 FetchContent_Declare(
-    catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG        v2.11.1
+        catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG        v2.11.1
 )
 
 # Adds catch2 library. This is a header only library.
@@ -82,7 +82,7 @@ FetchContent_GetProperties(catch2)
 if(NOT catch2_POPULATED)
     FetchContent_Populate(catch2)
     # This is overkill since we only need a single file. Though it is a clean solution.
-    add_library(catch2 INTERFACE src/player.cpp include/player.h)
+    add_library(catch2 INTERFACE)
     target_include_directories(catch2 INTERFACE ${catch2_SOURCE_DIR}/single_include)
 endif()
 
