@@ -6,9 +6,14 @@
 
 #include <cinder/app/App.h>
 #include <Box2D/Box2D.h>
+#include <mylibrary/engine.h>
 #include <set>
 
+using mylibrary::Engine;
+
 namespace myapp {
+  const int kWidth = 1280;
+  const int kHeight = 720;
 
   class MyApp : public cinder::app::App {
   public:
@@ -18,15 +23,8 @@ namespace myapp {
     void draw() override;
     void keyDown(cinder::app::KeyEvent) override;
     void keyUp(cinder::app::KeyEvent) override;
-
-    void DrawBodies();
-    void CreateRect(double x, double y, double h, double w, double angle);
-    void CreateBoundaries();
-    b2Body* CreatePlayer(double x, double y, double h, double w, double angle);
   private:
-    b2World* game_world;
-    b2Body* player;
-    std::set<int> held_keys_;
+    Engine engine_;
   };
 
 }  // namespace myapp

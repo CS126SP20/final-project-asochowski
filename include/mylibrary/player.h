@@ -11,8 +11,12 @@ class Player {
 public:
   explicit Player(b2World* world);
   Player();
+  void SetVelocity(b2Vec2 velocity);
+  b2Vec2 GetVelocity();
+  void Jump();
 
 private:
+  b2Body* body_;
 
 };
 
