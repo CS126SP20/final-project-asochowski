@@ -53,7 +53,7 @@ namespace myapp {
 
     if (held_keys_.find(KeyEvent::KEY_SPACE) != held_keys_.end()
     && player->GetContactList()) {
-      player->ApplyForceToCenter(b2Vec2(player->GetLinearVelocity().x, -1000));
+      player->ApplyForceToCenter(b2Vec2(player->GetLinearVelocity().x, -1500));
     }
 
 

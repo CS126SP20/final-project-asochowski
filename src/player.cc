@@ -4,4 +4,12 @@
 
 namespace mylibrary {
 
+Player::Player(b2World *world) {
+
+}
+
+  Player::Player() {
+
+  }
+
 }  // namespace mylibrary

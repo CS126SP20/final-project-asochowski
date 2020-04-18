@@ -2,12 +2,15 @@
 #ifndef FINALPROJECT_MYLIBRARY_EXAMPLE_H_
 #define FINALPROJECT_MYLIBRARY_EXAMPLE_H_
 
+#include <Box2D/Box2D.h>
 
 
 namespace mylibrary {
 
 class Player {
 public:
+  explicit Player(b2World* world);
+  Player();
 
 private:
 
