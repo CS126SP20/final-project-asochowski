@@ -7,7 +7,9 @@
 
 #include <Box2D/Box2D.h>
 #include <mylibrary/player.h>
+#include <mylibrary/debris.h>
 #include <set>
+#include <vector>
 
 namespace mylibrary {
 
@@ -21,8 +23,7 @@ const float32 kTimeStep = 1.0f / 60.0f;
 const int32 kVelIterations = 8;
 const int32 kPosIterations = 3;
 
-
-const int kMoveSpeed = 15;
+const int kMoveSpeed = 20;
 
 class Engine {
 public:
@@ -35,6 +36,7 @@ public:
   void Start();
   void End();
   bool IsRunning();
+  void SpawnDebris(int x_px, int y_px);
 
 private:
   b2World* world_;
@@ -45,10 +47,12 @@ private:
   float32 px_to_m;
   bool running_ = false;
   std::set<int> held_keys_;
+  std::vector<Debris*> all_debris_;
 
   void UpdatePlayer();
   void CreateBoundaries();
   void DrawHitBoxes();
+  void CheckDebrisCollisions();
 
 };
 

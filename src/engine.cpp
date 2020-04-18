@@ -24,6 +24,8 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   Player player(world_);
   player_ = player;
   CreateBoundaries();
+  std::vector<Debris*> debrises;
+  all_debris_ = debrises;
 }
 
 Engine::Engine() {
@@ -34,6 +36,7 @@ Engine::Engine() {
 void mylibrary::Engine::Step() {
   if (running_) {
     UpdatePlayer();
+    CheckDebrisCollisions();
     world_->Step(kTimeStep, kVelIterations, kPosIterations);
   }
 }
@@ -62,20 +65,44 @@ bool mylibrary::Engine::IsRunning() {
   return running_;
 }
 
+void Engine::SpawnDebris(int x_px, int y_px) {
+  float real_x = ((float) x_px - (float) screen_width_ / 2) * px_to_m;
+  float real_y = ((float) y_px - (float) screen_height_ / 2)* px_to_m;
+
+  Debris* debris = new Debris(world_, real_x, real_y, 1);
+  all_debris_.push_back(debris);
+}
+
 //==============================================================================
 // Private Functions
 //==============================================================================
 
 void mylibrary::Engine::CreateBoundaries() {
-  b2BodyDef groundBodyDef;
-  groundBodyDef.position = b2Vec2(0.0f, 20.0f);
-  groundBodyDef.angle = 0;
-  groundBodyDef.type = b2_staticBody;
-  b2Body* groundBody = world_->CreateBody(&groundBodyDef);
 
-  b2PolygonShape groundBox;
-  groundBox.SetAsBox(100.0f, 1.0f);
-  groundBody->CreateFixture(&groundBox, 0.0f);
+  // Creating the ground
+  b2BodyDef ground_body_def;
+  ground_body_def.position = b2Vec2(0.0f, 26.0f);
+  ground_body_def.angle = 0;
+  ground_body_def.type = b2_staticBody;
+  b2Body* ground_body = world_->CreateBody(&ground_body_def);
+
+  b2PolygonShape ground_box;
+  ground_box.SetAsBox(45.0f, 1.0f);
+  ground_body->CreateFixture(&ground_box, 0.0f);
+
+  // Creating the two platforms
+  b2PolygonShape platform_box;
+  platform_box.SetAsBox(8.0f, 1.0f);
+
+  for (int i = -1; i < 2; i += 2) {
+    b2BodyDef platform_body_def;
+    platform_body_def.position = b2Vec2(25.0f * i, 12.0f);
+    platform_body_def.angle = 0;
+    platform_body_def.type = b2_staticBody;
+    b2Body* platform_body = world_->CreateBody(&platform_body_def);
+
+    platform_body->CreateFixture(&platform_box, 0.0f);
+  }
 }
 
 void Engine::UpdatePlayer() {
@@ -145,5 +172,14 @@ void Engine::DrawHitBoxes() {
   }
 }
 
+void Engine::CheckDebrisCollisions() {
+  for (int i = all_debris_.size() - 1; i >= 0; i--) {
+    Debris* debris = all_debris_.at(i);
+    if (debris->GetBody()->GetContactList()) {
+      all_debris_.erase(all_debris_.begin()+i);
+      delete debris;
+    }
+  }
+}
 
 }

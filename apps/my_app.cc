@@ -44,6 +44,10 @@ namespace myapp {
     engine_.KeyRelease(event.getCode());
   }
 
-
+  void MyApp::mouseDown(cinder::app::MouseEvent event) {
+    if (event.isLeftDown()) {
+      engine_.SpawnDebris(event.getX(), event.getY());
+    }
+  }
 
 }  // namespace myapp
