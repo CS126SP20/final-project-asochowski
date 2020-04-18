@@ -30,6 +30,7 @@ namespace myapp {
     b2Vec2 gravity(0, 3 * 9.8);
     game_world = new b2World(gravity);
     player = CreatePlayer(0,0,1,1,0);
+    CreateRect(0,1,1,1,2);
     CreateBoundaries();
   }
 
@@ -38,6 +39,24 @@ namespace myapp {
   }
 
   void MyApp::update() {
+
+    if (held_keys_.find(KeyEvent::KEY_a) != held_keys_.end() &&
+    held_keys_.find(KeyEvent::KEY_d) != held_keys_.end()) {
+      player->SetLinearVelocity(b2Vec2(0,player->GetLinearVelocity().y));
+    } else if (held_keys_.find(KeyEvent::KEY_a) != held_keys_.end()) {
+      player->SetLinearVelocity(b2Vec2(-10,player->GetLinearVelocity().y));
+    } else if (held_keys_.find(KeyEvent::KEY_d) != held_keys_.end()) {
+      player->SetLinearVelocity(b2Vec2(10,player->GetLinearVelocity().y));
+    } else {
+      player->SetLinearVelocity(b2Vec2(0,player->GetLinearVelocity().y));
+    }
+
+    if (held_keys_.find(KeyEvent::KEY_SPACE) != held_keys_.end()
+    && player->GetContactList()) {
+      player->ApplyForceToCenter(b2Vec2(player->GetLinearVelocity().x, -1000));
+    }
+
+
     game_world->Step(kTimeStep, kVelIterations, kPosIterations);
   }
 
@@ -49,64 +68,11 @@ namespace myapp {
   }
 
   void MyApp::keyDown(KeyEvent event) {
-    b2Vec2 vel = player->GetLinearVelocity();
-    switch (event.getCode()) {
-      case KeyEvent::KEY_UP:
-      case KeyEvent::KEY_SPACE:
-      case KeyEvent::KEY_w: {
-        if (player->GetContactList()) {
-          player->ApplyForceToCenter(b2Vec2(0, -7000));
-        }
-        break;
-      }
-      case KeyEvent::KEY_DOWN:
-      case KeyEvent::KEY_s: {
-        break;
-      }
-      case KeyEvent::KEY_LEFT:
-      case KeyEvent::KEY_a: {
-        vel.x = -20;
-        player->SetLinearVelocity(vel);
-        break;
-      }
-      case KeyEvent::KEY_RIGHT:
-      case KeyEvent::KEY_d: {
-        vel.x = 20;
-        player->SetLinearVelocity(vel);
-        break;
-      }
-    }
+    held_keys_.insert(event.getCode());
   }
 
   void MyApp::keyUp(KeyEvent event) {
-    b2Vec2 vel = player->GetLinearVelocity();
-    switch (event.getCode()) {
-      case KeyEvent::KEY_UP:
-      case KeyEvent::KEY_w: {
-        break;
-      }
-      case KeyEvent::KEY_DOWN:
-      case KeyEvent::KEY_s: {
-        break;
-      }
-      case KeyEvent::KEY_LEFT:
-      case KeyEvent::KEY_a: {
-        if (vel.x == -20) {
-          vel.x = 0;
-        }
-        player->SetLinearVelocity(vel);
-        break;
-      }
-
-      case KeyEvent::KEY_RIGHT:
-      case KeyEvent::KEY_d: {
-        if (vel.x == 20) {
-          vel.x = 0;
-        }
-        player->SetLinearVelocity(vel);
-        break;
-      }
-    }
+    held_keys_.erase(event.getCode());
   }
 
 
@@ -120,12 +86,23 @@ namespace myapp {
 
       for (int i = 0; i < ((b2PolygonShape*)current_body->GetFixtureList()->
           GetShape())->GetVertexCount(); i++) {
+
         b2Vec2 vertex = ((b2PolygonShape*)current_body->GetFixtureList()->
             GetShape())->GetVertex(i);
+        float32 theta = current_body->GetAngle();
+
+        // Since Box2D only gives the fixture's original coordinates, the
+        // current position, and the current angle, we can use a rotation matrix
+        // to calculate the real vertex coordinate.
+        b2Vec2 real_vertex(cos(theta)*vertex.x - sin(theta)*vertex.y,
+            sin(theta)*vertex.x + cos(theta)*vertex.y);
+
         if (i == 0) {
-          body_path.moveTo(kMToPx * (pos.x + vertex.x) + 400, kMToPx * (pos.y + vertex.y) + 400);
+          body_path.moveTo(kMToPx * (pos.x + real_vertex.x) + 400,
+              kMToPx * (pos.y + real_vertex.y) + 400);
         } else {
-          body_path.lineTo(kMToPx * (pos.x + vertex.x) + 400, kMToPx * (pos.y + vertex.y) + 400);
+          body_path.lineTo(kMToPx * (pos.x + real_vertex.x) + 400,
+              kMToPx * (pos.y + real_vertex.y) + 400);
         }
       }
       body_path.close();
@@ -156,6 +133,7 @@ namespace myapp {
   void MyApp::CreateBoundaries() {
     b2BodyDef groundBodyDef;
     groundBodyDef.position = b2Vec2(0.0f, 20.0f);
+    groundBodyDef.angle = 0;
     groundBodyDef.type = b2_staticBody;
     b2Body* groundBody = game_world->CreateBody(&groundBodyDef);
 
@@ -170,6 +148,7 @@ namespace myapp {
     body_def.position.Set(x, y);
     body_def.angle = angle;
     b2Body* dynamic_body = game_world->CreateBody(&body_def);
+    dynamic_body->SetFixedRotation(true);
 
     b2PolygonShape box_shape;
     box_shape.SetAsBox(w, h);

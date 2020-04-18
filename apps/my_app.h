@@ -6,6 +6,7 @@
 
 #include <cinder/app/App.h>
 #include <Box2D/Box2D.h>
+#include <set>
 
 namespace myapp {
 
@@ -25,6 +26,7 @@ namespace myapp {
   private:
     b2World* game_world;
     b2Body* player;
+    std::set<int> held_keys_;
   };
 
 }  // namespace myapp
