@@ -8,6 +8,7 @@
 #include <Box2D/Box2D.h>
 #include <mylibrary/player.h>
 #include <mylibrary/debris.h>
+#include <mylibrary/bullet.h>
 #include <set>
 #include <vector>
 
@@ -37,6 +38,7 @@ public:
   void End();
   bool IsRunning();
   void SpawnDebris(int x_px, int y_px);
+  void SpawnBullet(int x_px, int y_px);
 
 private:
   b2World* world_;
@@ -48,11 +50,15 @@ private:
   bool running_ = false;
   std::set<int> held_keys_;
   std::vector<Debris*> all_debris_;
+  std::vector<Bullet*> all_bullets_;
 
   void UpdatePlayer();
   void CreateBoundaries();
   void DrawHitBoxes();
   void CheckDebrisCollisions();
+  void CheckBulletCollisions();
+  b2Vec2 PxCoordsToMeterCoords(b2Vec2);
+  b2Vec2 MeterCoordsToPxCoords(b2Vec2);
 
 };
 

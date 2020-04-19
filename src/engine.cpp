@@ -24,8 +24,6 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   Player player(world_);
   player_ = player;
   CreateBoundaries();
-  std::vector<Debris*> debrises;
-  all_debris_ = debrises;
 }
 
 Engine::Engine() {
@@ -35,8 +33,9 @@ Engine::Engine() {
 
 void mylibrary::Engine::Step() {
   if (running_) {
-    UpdatePlayer();
+    CheckBulletCollisions();
     CheckDebrisCollisions();
+    UpdatePlayer();
     world_->Step(kTimeStep, kVelIterations, kPosIterations);
   }
 }
@@ -66,11 +65,17 @@ bool mylibrary::Engine::IsRunning() {
 }
 
 void Engine::SpawnDebris(int x_px, int y_px) {
-  float real_x = ((float) x_px - (float) screen_width_ / 2) * px_to_m;
-  float real_y = ((float) y_px - (float) screen_height_ / 2)* px_to_m;
+  b2Vec2 coords = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
 
-  Debris* debris = new Debris(world_, real_x, real_y, 1);
+  Debris* debris = new Debris(world_, coords.x, coords.y, 2.5);
   all_debris_.push_back(debris);
+}
+
+void Engine::SpawnBullet(int x_px, int y_px) {
+  b2Vec2 target = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
+
+  auto* bullet = new Bullet(world_, player_.GetBody()->GetPosition(), target);
+  all_bullets_.push_back(bullet);
 }
 
 //==============================================================================
@@ -92,7 +97,7 @@ void mylibrary::Engine::CreateBoundaries() {
 
   // Creating the two platforms
   b2PolygonShape platform_box;
-  platform_box.SetAsBox(8.0f, 1.0f);
+  platform_box.SetAsBox(5.0f, 1.0f);
 
   for (int i = -1; i < 2; i += 2) {
     b2BodyDef platform_body_def;
@@ -178,8 +183,36 @@ void Engine::CheckDebrisCollisions() {
     if (debris->GetBody()->GetContactList()) {
       all_debris_.erase(all_debris_.begin()+i);
       delete debris;
+      break;
     }
   }
 }
+
+void Engine::CheckBulletCollisions() {
+  for (int i = all_bullets_.size() - 1; i >= 0; i--) {
+    Bullet* bullet = all_bullets_.at(i);
+    while (bullet->GetBody()->GetContactList()) {
+      if (bullet->GetBody()->GetContactList()->other->GetType() == b2_staticBody) {
+        all_bullets_.erase(all_bullets_.begin()+i);
+        delete bullet;
+        break;
+      } else {
+        break;
+      }
+    }
+  }
+}
+
+b2Vec2 Engine::PxCoordsToMeterCoords(b2Vec2 px_vec) {
+  return b2Vec2((px_vec.x - (float) screen_width_ / 2) * px_to_m,
+                (px_vec.y - (float) screen_height_ / 2) * px_to_m);
+}
+
+b2Vec2 Engine::MeterCoordsToPxCoords(b2Vec2 m_vec) {
+  return b2Vec2( (m_to_px * m_vec.x) + (float) screen_width_ / 2,
+                 (m_to_px * m_vec.y) + (float) screen_height_ / 2);
+}
+
+
 
 }

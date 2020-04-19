@@ -41,4 +41,8 @@ void Player::Jump() {
   }
 }
 
+b2Body* Player::GetBody() {
+  return body_;
+}
+
 }  // namespace mylibrary

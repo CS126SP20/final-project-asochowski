@@ -14,6 +14,7 @@ public:
   void SetVelocity(b2Vec2 velocity);
   b2Vec2 GetVelocity();
   void Jump();
+  b2Body* GetBody();
 
 private:
   b2Body* body_;

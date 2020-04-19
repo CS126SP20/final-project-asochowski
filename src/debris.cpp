@@ -27,7 +27,7 @@ Debris::Debris(b2World *world, int x, int y, float r) {
   body_->CreateFixture(&box_fixture_def);
   body_->SetAngularVelocity(10);
   int pos_or_neg = 1 - 2 * (rand() % 2);
-  body_->SetLinearVelocity(b2Vec2(pos_or_neg*20, 0));
+  body_->SetLinearVelocity(b2Vec2(pos_or_neg*10, -10));
 }
 
 Debris::~Debris() {
