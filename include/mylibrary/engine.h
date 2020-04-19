@@ -11,6 +11,8 @@
 #include <mylibrary/bullet.h>
 #include <set>
 #include <vector>
+#include <chrono>
+
 
 namespace mylibrary {
 
@@ -37,8 +39,7 @@ public:
   void Start();
   void End();
   bool IsRunning();
-  void SpawnDebris(int x_px, int y_px);
-  void SpawnBullet(int x_px, int y_px);
+  void Shoot(int x_px, int y_px);
 
 private:
   b2World* world_;
@@ -51,12 +52,18 @@ private:
   std::set<int> held_keys_;
   std::vector<Debris*> all_debris_;
   std::vector<Bullet*> all_bullets_;
+  std::chrono::time_point<std::chrono::system_clock> start_time_;
+  std::chrono::time_point<std::chrono::system_clock> last_debris_time_;
 
+  void SpawnDebris(int x_px, int y_px);
+  Bullet* SpawnBullet(int x_px, int y_px);
   void UpdatePlayer();
   void CreateBoundaries();
   void DrawHitBoxes();
   void CheckDebrisCollisions();
   void CheckBulletCollisions();
+  void CheckDebrisSpawn();
+  std::chrono::milliseconds GetDebrisSpawnInterval();
   b2Vec2 PxCoordsToMeterCoords(b2Vec2);
   b2Vec2 MeterCoordsToPxCoords(b2Vec2);
 

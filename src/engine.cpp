@@ -24,6 +24,7 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   Player player(world_);
   player_ = player;
   CreateBoundaries();
+  start_time_ = std::chrono::system_clock::now();
 }
 
 Engine::Engine() {
@@ -33,6 +34,7 @@ Engine::Engine() {
 
 void mylibrary::Engine::Step() {
   if (running_) {
+    CheckDebrisSpawn();
     CheckBulletCollisions();
     CheckDebrisCollisions();
     UpdatePlayer();
@@ -54,6 +56,8 @@ void Engine::Draw() {
 
 void mylibrary::Engine::Start() {
   running_ = true;
+  start_time_ = std::chrono::system_clock::now();
+  last_debris_time_ = std::chrono::system_clock::now();
 }
 
 void mylibrary::Engine::End() {
@@ -71,11 +75,12 @@ void Engine::SpawnDebris(int x_px, int y_px) {
   all_debris_.push_back(debris);
 }
 
-void Engine::SpawnBullet(int x_px, int y_px) {
+Bullet* Engine::SpawnBullet(int x_px, int y_px) {
   b2Vec2 target = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
 
   auto* bullet = new Bullet(world_, player_.GetBody()->GetPosition(), target);
   all_bullets_.push_back(bullet);
+  return bullet;
 }
 
 //==============================================================================
@@ -203,6 +208,34 @@ void Engine::CheckBulletCollisions() {
   }
 }
 
+void Engine::CheckDebrisSpawn() {
+  std::chrono::time_point<std::chrono::system_clock> current_time =
+      std::chrono::system_clock::now();
+  auto time_since_last_spawn = current_time - last_debris_time_;
+  auto spawn_interval = GetDebrisSpawnInterval();
+
+  if (time_since_last_spawn >= spawn_interval) {
+    SpawnDebris(rand() % screen_width_,-100);
+    last_debris_time_ = std::chrono::system_clock::now();
+  }
+}
+
+std::chrono::milliseconds Engine::GetDebrisSpawnInterval() {
+  std::chrono::time_point<std::chrono::system_clock> current_time =
+      std::chrono::system_clock::now();
+  auto time_since_start = current_time - start_time_;
+  int time_in_seconds = (std::chrono::duration_cast<std::chrono::seconds>
+      (time_since_start)).count();
+
+  double current_spawn_speed = 5 * log(.135 * time_in_seconds + 1);
+  int seconds_between_spawns = 1000.0 / current_spawn_speed;
+
+  std::chrono::milliseconds milliseconds(seconds_between_spawns);
+
+  return milliseconds;
+}
+
+
 b2Vec2 Engine::PxCoordsToMeterCoords(b2Vec2 px_vec) {
   return b2Vec2((px_vec.x - (float) screen_width_ / 2) * px_to_m,
                 (px_vec.y - (float) screen_height_ / 2) * px_to_m);
@@ -213,6 +246,14 @@ b2Vec2 Engine::MeterCoordsToPxCoords(b2Vec2 m_vec) {
                  (m_to_px * m_vec.y) + (float) screen_height_ / 2);
 }
 
+void Engine::Shoot(int x_px, int y_px) {
+  Bullet* bullet = SpawnBullet(x_px, y_px);
+  b2Vec2 bullet_trajectory = bullet->GetTrajectory();
+  b2Vec2 player_knockback_impulse =
+      b2Vec2(-bullet_trajectory.x, -bullet_trajectory.y);
+
+
+}
 
 
 }

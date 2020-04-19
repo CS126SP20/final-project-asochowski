@@ -46,9 +46,7 @@ namespace myapp {
 
   void MyApp::mouseDown(cinder::app::MouseEvent event) {
     if (event.isLeftDown()) {
-      engine_.SpawnBullet(event.getX(), event.getY());
-    } else if (event.isRightDown()) {
-      engine_.SpawnDebris(event.getX(), event.getY());
+      engine_.Shoot(event.getX(), event.getY());
     }
   }
 

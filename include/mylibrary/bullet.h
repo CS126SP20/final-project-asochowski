@@ -15,8 +15,11 @@ public:
   Bullet(b2World* world, const b2Vec2& player_pos, const b2Vec2& target_pos);
   ~Bullet();
   b2Body* GetBody();
+  b2Vec2 GetTrajectory();
+
 private:
   b2Body* body_;
+  b2Vec2 trajectory_;
 
 };
 
