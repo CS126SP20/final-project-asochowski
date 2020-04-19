@@ -45,4 +45,8 @@ b2Body* Player::GetBody() {
   return body_;
 }
 
+void Player::ApplyImpulse(b2Vec2 impulse) {
+  body_->ApplyLinearImpulse(impulse, body_->GetWorldCenter());
+}
+
 }  // namespace mylibrary

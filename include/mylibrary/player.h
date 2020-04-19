@@ -13,6 +13,7 @@ public:
   Player();
   void SetVelocity(b2Vec2 velocity);
   b2Vec2 GetVelocity();
+  void ApplyImpulse(b2Vec2 impulse);
   void Jump();
   b2Body* GetBody();
 

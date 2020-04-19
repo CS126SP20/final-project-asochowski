@@ -131,13 +131,13 @@ void Engine::UpdatePlayer() {
 
   // Setting player's left and right movements according to A and D.
   if (press_a && press_d) {
-    player_.SetVelocity(b2Vec2(0, current_velocity.y));
+    player_.ApplyImpulse(b2Vec2(-current_velocity.x, 0));
   } else if (press_a) {
-    player_.SetVelocity(b2Vec2(-kMoveSpeed, current_velocity.y));
+    player_.ApplyImpulse(b2Vec2(-kMoveSpeed, 0));
   } else if (press_d) {
-    player_.SetVelocity(b2Vec2(kMoveSpeed, current_velocity.y));
+    player_.ApplyImpulse(b2Vec2(kMoveSpeed, 0));
   } else {
-    player_.SetVelocity(b2Vec2(0, current_velocity.y));
+
   }
 
   if (press_space) {
@@ -250,9 +250,8 @@ void Engine::Shoot(int x_px, int y_px) {
   Bullet* bullet = SpawnBullet(x_px, y_px);
   b2Vec2 bullet_trajectory = bullet->GetTrajectory();
   b2Vec2 player_knockback_impulse =
-      b2Vec2(-bullet_trajectory.x, -bullet_trajectory.y);
-
-
+      b2Vec2(-30000 * bullet_trajectory.x, -30000 * bullet_trajectory.y);
+  player_.GetBody()->ApplyForceToCenter(player_knockback_impulse);
 }
 
 

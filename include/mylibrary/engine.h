@@ -26,7 +26,7 @@ const float32 kTimeStep = 1.0f / 60.0f;
 const int32 kVelIterations = 8;
 const int32 kPosIterations = 3;
 
-const int kMoveSpeed = 20;
+const int kMoveSpeed = 15;
 
 class Engine {
 public:
