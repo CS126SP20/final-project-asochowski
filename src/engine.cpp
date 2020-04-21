@@ -68,6 +68,14 @@ bool mylibrary::Engine::IsRunning() {
   return running_;
 }
 
+Player& Engine::GetPlayer() {
+  return player_;
+}
+
+//==============================================================================
+// Private Functions
+//==============================================================================
+
 void Engine::SpawnDebris(int x_px, int y_px) {
   b2Vec2 coords = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
   all_debris_.push_back(new Debris(world_, coords.x, coords.y, 2.5));
@@ -80,10 +88,6 @@ Bullet* Engine::SpawnBullet(int x_px, int y_px) {
   all_bullets_.push_back(bullet);
   return bullet;
 }
-
-//==============================================================================
-// Private Functions
-//==============================================================================
 
 void mylibrary::Engine::CreateBoundaries() {
 
@@ -262,6 +266,8 @@ void Engine::Shoot(int x_px, int y_px) {
     player_.Shoot();
   }
 }
+
+
 
 
 }

@@ -41,6 +41,9 @@ public:
   void End();
   bool IsRunning();
   void Shoot(int x_px, int y_px);
+  Player& GetPlayer();
+  void SpawnDebris(int x_px, int y_px);
+  Bullet* SpawnBullet(int x_px, int y_px);
 
 private:
   b2World* world_;
@@ -56,8 +59,6 @@ private:
   std::chrono::time_point<std::chrono::system_clock> start_time_;
   std::chrono::time_point<std::chrono::system_clock> last_debris_time_;
 
-  void SpawnDebris(int x_px, int y_px);
-  Bullet* SpawnBullet(int x_px, int y_px);
   void UpdatePlayer();
   void CreateBoundaries();
   void DrawHitBoxes();
