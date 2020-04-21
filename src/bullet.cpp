@@ -19,8 +19,8 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
 
   // Making bullet velocity and spawn position vectors
   b2Vec2 velocity = b2Vec2(trajectory.x * 300, trajectory.y * 300);
-  b2Vec2 spawn_pos = b2Vec2(player_pos.x + 5 * trajectory.x,
-      player_pos.y + 5 * trajectory.y);
+  b2Vec2 spawn_pos = b2Vec2(player_pos.x + 4.5 * trajectory.x,
+      player_pos.y + 4.5 * trajectory.y);
 
   // Defining bullet body
   b2BodyDef body_def;
@@ -39,6 +39,9 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
   body_->CreateFixture(&box_fixture_def);
   body_->SetLinearVelocity(velocity);
   body_->SetGravityScale(0);
+  body_->SetBullet(true);
+
+  spawn_time_ = std::chrono::system_clock::now();
 }
 
 Bullet::Bullet() {
@@ -55,6 +58,12 @@ b2Body* Bullet::GetBody() {
 
 b2Vec2 Bullet::GetTrajectory() {
   return trajectory_;
+}
+
+int Bullet::GetMilliseconds() {
+  int time_in_ms = (std::chrono::duration_cast<std::chrono::milliseconds>
+      (std::chrono::system_clock::now() - spawn_time_)).count();
+  return time_in_ms;
 }
 
 }

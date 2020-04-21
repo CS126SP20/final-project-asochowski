@@ -23,10 +23,11 @@ const float32 kTimeStep = 1.0f / 60.0f;
 
 // These two parameters determine how much Box2D should "correct" velocity and
 // position. More iterations = More accurate physics + Higher computational cost
-const int32 kVelIterations = 8;
-const int32 kPosIterations = 3;
+const int32 kVelIterations = 20;
+const int32 kPosIterations = 20;
 
 const int kMoveSpeed = 15;
+const int kBulletLifetime = 2500;
 
 class Engine {
 public:
@@ -61,7 +62,7 @@ private:
   void CreateBoundaries();
   void DrawHitBoxes();
   void CheckDebrisCollisions();
-  void CheckBulletCollisions();
+  void CheckBullets();
   void CheckDebrisSpawn();
   std::chrono::milliseconds GetDebrisSpawnInterval();
   b2Vec2 PxCoordsToMeterCoords(b2Vec2);

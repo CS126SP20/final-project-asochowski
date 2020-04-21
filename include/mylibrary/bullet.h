@@ -6,6 +6,8 @@
 #define FINALPROJECT_MYLIBRARY_BULLET_H
 
 #include <Box2D/Box2D.h>
+#include <chrono>
+
 
 namespace  mylibrary {
 
@@ -16,10 +18,12 @@ public:
   ~Bullet();
   b2Body* GetBody();
   b2Vec2 GetTrajectory();
+  int GetMilliseconds();
 
 private:
   b2Body* body_;
   b2Vec2 trajectory_;
+  std::chrono::time_point<std::chrono::system_clock> spawn_time_;
 
 };
 

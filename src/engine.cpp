@@ -35,7 +35,7 @@ Engine::Engine() {
 void mylibrary::Engine::Step() {
   if (running_) {
     CheckDebrisSpawn();
-    CheckBulletCollisions();
+    CheckBullets();
     CheckDebrisCollisions();
     UpdatePlayer();
     world_->Step(kTimeStep, kVelIterations, kPosIterations);
@@ -70,9 +70,7 @@ bool mylibrary::Engine::IsRunning() {
 
 void Engine::SpawnDebris(int x_px, int y_px) {
   b2Vec2 coords = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
-
-  Debris* debris = new Debris(world_, coords.x, coords.y, 2.5);
-  all_debris_.push_back(debris);
+  all_debris_.push_back(new Debris(world_, coords.x, coords.y, 2.5));
 }
 
 Bullet* Engine::SpawnBullet(int x_px, int y_px) {
@@ -136,8 +134,6 @@ void Engine::UpdatePlayer() {
     player_.ApplyImpulse(b2Vec2(-kMoveSpeed, 0));
   } else if (press_d) {
     player_.ApplyImpulse(b2Vec2(kMoveSpeed, 0));
-  } else {
-
   }
 
   if (press_space) {
@@ -185,25 +181,35 @@ void Engine::DrawHitBoxes() {
 void Engine::CheckDebrisCollisions() {
   for (int i = all_debris_.size() - 1; i >= 0; i--) {
     Debris* debris = all_debris_.at(i);
-    if (debris->GetBody()->GetContactList()) {
+    b2ContactEdge* collisions_list = debris->GetBody()->GetContactList();
+
+    // Delete debris that collide with a static body
+    if (collisions_list && (collisions_list->other->GetType() == b2_staticBody
+    || collisions_list->other->IsBullet())) {
       all_debris_.erase(all_debris_.begin()+i);
       delete debris;
-      break;
+    } else if (collisions_list && player_.IsBody(collisions_list->other)) {
+      running_ = false;
     }
   }
 }
 
-void Engine::CheckBulletCollisions() {
+void Engine::CheckBullets() {
   for (int i = all_bullets_.size() - 1; i >= 0; i--) {
     Bullet* bullet = all_bullets_.at(i);
-    while (bullet->GetBody()->GetContactList()) {
+
+    // Deleting bullets that collide with a static body
+    if (bullet->GetBody()->GetContactList()) {
       if (bullet->GetBody()->GetContactList()->other->GetType() == b2_staticBody) {
         all_bullets_.erase(all_bullets_.begin()+i);
         delete bullet;
-        break;
-      } else {
-        break;
       }
+    }
+
+    // Deleting bullets that are 2.5 seconds old
+    if (bullet->GetMilliseconds() > kBulletLifetime) {
+      all_bullets_.erase(all_bullets_.begin()+i);
+      delete bullet;
     }
   }
 }
@@ -227,7 +233,7 @@ std::chrono::milliseconds Engine::GetDebrisSpawnInterval() {
   int time_in_seconds = (std::chrono::duration_cast<std::chrono::seconds>
       (time_since_start)).count();
 
-  double current_spawn_speed = 5 * log(.135 * time_in_seconds + 1);
+  double current_spawn_speed = 1.0 + (double) time_in_seconds / 20.0;
   int seconds_between_spawns = 1000.0 / current_spawn_speed;
 
   std::chrono::milliseconds milliseconds(seconds_between_spawns);
@@ -247,11 +253,14 @@ b2Vec2 Engine::MeterCoordsToPxCoords(b2Vec2 m_vec) {
 }
 
 void Engine::Shoot(int x_px, int y_px) {
-  Bullet* bullet = SpawnBullet(x_px, y_px);
-  b2Vec2 bullet_trajectory = bullet->GetTrajectory();
-  b2Vec2 player_knockback_impulse =
-      b2Vec2(-30000 * bullet_trajectory.x, -30000 * bullet_trajectory.y);
-  player_.GetBody()->ApplyForceToCenter(player_knockback_impulse);
+  if (player_.CanShoot()) {
+    Bullet* bullet = SpawnBullet(x_px, y_px);
+    b2Vec2 bullet_trajectory = bullet->GetTrajectory();
+    b2Vec2 player_knockback_impulse =
+        b2Vec2(-50000 * bullet_trajectory.x, -50000 * bullet_trajectory.y);
+    player_.GetBody()->ApplyForceToCenter(player_knockback_impulse);
+    player_.Shoot();
+  }
 }
 
 

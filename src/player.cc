@@ -1,6 +1,7 @@
 // Copyright (c) 2020 [Your Name]. All rights reserved.
 
 #include <mylibrary/player.h>
+#include <chrono>
 
 namespace mylibrary {
 
@@ -19,6 +20,7 @@ Player::Player(b2World* world) {
   box_fixture_def.density = 1;
 
   body_->CreateFixture(&box_fixture_def);
+  last_shot_time_ = std::chrono::system_clock::now();
 }
 
 Player::Player() {
@@ -47,6 +49,19 @@ b2Body* Player::GetBody() {
 
 void Player::ApplyImpulse(b2Vec2 impulse) {
   body_->ApplyLinearImpulse(impulse, body_->GetWorldCenter());
+}
+
+bool Player::IsBody(b2Body* body) {
+  return body == body_;
+}
+
+bool Player::CanShoot() {
+  return std::chrono::system_clock::now() - last_shot_time_
+  > std::chrono::milliseconds(kShootCooldown);
+}
+
+void Player::Shoot() {
+  last_shot_time_ = std::chrono::system_clock::now();
 }
 
 }  // namespace mylibrary
