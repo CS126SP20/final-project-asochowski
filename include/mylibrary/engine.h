@@ -42,7 +42,7 @@ public:
   bool IsRunning();
   void Shoot(int x_px, int y_px);
   Player& GetPlayer();
-  void SpawnDebris(int x_px, int y_px);
+  Debris* SpawnDebris(int x_px, int y_px);
   Bullet* SpawnBullet(int x_px, int y_px);
 
 private:

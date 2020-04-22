@@ -76,9 +76,13 @@ Player& Engine::GetPlayer() {
 // Private Functions
 //==============================================================================
 
-void Engine::SpawnDebris(int x_px, int y_px) {
+Debris* Engine::SpawnDebris(int x_px, int y_px) {
   b2Vec2 coords = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
-  all_debris_.push_back(new Debris(world_, coords.x, coords.y, 2.5));
+
+  auto* debris = new Debris(world_, coords.x, coords.y, 2.5);
+  all_debris_.push_back(debris);
+
+  return debris;
 }
 
 Bullet* Engine::SpawnBullet(int x_px, int y_px) {
@@ -86,6 +90,7 @@ Bullet* Engine::SpawnBullet(int x_px, int y_px) {
 
   auto* bullet = new Bullet(world_, player_.GetBody()->GetPosition(), target);
   all_bullets_.push_back(bullet);
+
   return bullet;
 }
 
