@@ -37,4 +37,20 @@ b2Body *Debris::GetBody() {
   return body_;
 }
 
+float Debris::GetDistanceFrom(b2Body *other_body) {
+  b2Vec2 debris_pos = this->GetBody()->GetPosition();
+  b2Vec2 other_pos = other_body->GetPosition();
+
+  return sqrt(pow(other_pos.x - debris_pos.x,2) +
+  pow(other_pos.y - debris_pos.y,2));
+}
+
+void Debris::SetNearMissed() {
+  near_missed_ = true;
+}
+
+bool Debris::HasBeenNearMissed() {
+  return near_missed_;
+}
+
 }

@@ -12,8 +12,8 @@
 using mylibrary::Engine;
 
 namespace myapp {
-  const int kWidth = 1280;
-  const int kHeight = 720;
+  const int kWidth = 1920;
+  const int kHeight = 1080;
 
   class MyApp : public cinder::app::App {
   public:

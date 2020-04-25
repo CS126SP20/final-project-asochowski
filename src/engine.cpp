@@ -37,7 +37,11 @@ void mylibrary::Engine::Step() {
     CheckDebrisSpawn();
     CheckBullets();
     CheckDebrisCollisions();
-    UpdatePlayer();
+    if (!over_) {
+      CheckNearMisses();
+      UpdatePlayer();
+      UpdateScore();
+    }
     world_->Step(kTimeStep, kVelIterations, kPosIterations);
   }
 }
@@ -52,6 +56,7 @@ void mylibrary::Engine::KeyRelease(int key_code) {
 
 void Engine::Draw() {
   DrawHitBoxes();
+  DrawGui();
 }
 
 void mylibrary::Engine::Start() {
@@ -61,7 +66,7 @@ void mylibrary::Engine::Start() {
 }
 
 void mylibrary::Engine::End() {
-  running_ = false;
+  over_ = true;
 }
 
 bool mylibrary::Engine::IsRunning() {
@@ -202,10 +207,13 @@ void Engine::CheckDebrisCollisions() {
     // Delete debris that collide with a static body
     if (collisions_list && (collisions_list->other->GetType() == b2_staticBody
     || collisions_list->other->IsBullet())) {
+      if (collisions_list->other->IsBullet()) {
+        num_debris_shot_ += 1;
+      }
       all_debris_.erase(all_debris_.begin()+i);
       delete debris;
     } else if (collisions_list && player_.IsBody(collisions_list->other)) {
-      running_ = false;
+      End();
     }
   }
 }
@@ -269,7 +277,7 @@ b2Vec2 Engine::MeterCoordsToPxCoords(b2Vec2 m_vec) {
 }
 
 void Engine::Shoot(int x_px, int y_px) {
-  if (player_.CanShoot()) {
+  if (player_.CanShoot() && !over_) {
     Bullet* bullet = SpawnBullet(x_px, y_px);
     b2Vec2 bullet_trajectory = bullet->GetTrajectory();
     b2Vec2 player_knockback_impulse =
@@ -280,8 +288,43 @@ void Engine::Shoot(int x_px, int y_px) {
 }
 
 int Engine::GetSecondsSinceStart() {
-
+  return (std::chrono::duration_cast<std::chrono::seconds>
+      (std::chrono::system_clock::now() - start_time_)).count();
 }
 
+void Engine::DrawGui() {
+  std::string gui = std::to_string(player_.GetCooldownPercent())
+      + "Score: " + std::to_string(score_);
+
+  cinder::gl::drawStringRight(gui, cinder::vec2(
+      screen_width_,5),cinder::Color(1,
+          1,1), cinder::Font(kNormalFont, 50));
+
+  if (over_) {
+    b2Vec2 center = MeterCoordsToPxCoords(b2Vec2(0,0));
+    cinder::gl::drawStringCentered("Game Over", cinder::vec2(
+        center.x,center.y),cinder::Color(1,
+            0,0), cinder::Font(kNormalFont, 100));
+  }
+}
+
+void Engine::CheckNearMisses() {
+  for (Debris* debris: all_debris_) {
+    if (debris->GetDistanceFrom(player_.GetBody()) <=
+    kNearMissDistance && !debris->HasBeenNearMissed()) {
+      debris->SetNearMissed();
+      num_near_missed_ += 1;
+    }
+  }
+}
+
+void Engine::UpdateScore() {
+  score_ =  (int) ((num_near_missed_ + 2 * num_debris_shot_) *
+      log(GetSecondsSinceStart() + 1.1));
+}
+
+bool Engine::IsOver() {
+  return over_;
+}
 
 }

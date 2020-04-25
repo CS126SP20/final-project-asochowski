@@ -15,9 +15,13 @@ public:
   Debris(b2World* world, int x, int y, float r);
   ~Debris();
   b2Body* GetBody();
+  float GetDistanceFrom(b2Body* other_body);
+  void SetNearMissed();
+  bool HasBeenNearMissed();
 
 private:
   b2Body* body_;
+  bool near_missed_ = false;
 };
 
 }

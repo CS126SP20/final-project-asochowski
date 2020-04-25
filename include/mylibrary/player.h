@@ -21,6 +21,7 @@ public:
   b2Body* GetBody();
   bool IsBody(b2Body* body);
   bool CanShoot();
+  float GetCooldownPercent();
   void Shoot();
 
 private:

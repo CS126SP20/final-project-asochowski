@@ -64,4 +64,14 @@ void Player::Shoot() {
   last_shot_time_ = std::chrono::system_clock::now();
 }
 
+float Player::GetCooldownPercent() {
+  if (CanShoot()) {
+    return 1;
+  } else {
+    return (float) (std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::system_clock::now() - last_shot_time_)).count()
+        / (float) kShootCooldown;
+  }
+}
+
 }  // namespace mylibrary
