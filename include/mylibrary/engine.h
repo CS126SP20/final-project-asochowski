@@ -44,6 +44,7 @@ public:
   Player& GetPlayer();
   Debris* SpawnDebris(int x_px, int y_px);
   Bullet* SpawnBullet(int x_px, int y_px);
+  int GetSecondsSinceStart();
 
 private:
   b2World* world_;

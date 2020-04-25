@@ -98,14 +98,21 @@ void mylibrary::Engine::CreateBoundaries() {
 
   // Creating the ground
   b2BodyDef ground_body_def;
-  ground_body_def.position = b2Vec2(0.0f, 26.0f);
+  ground_body_def.position = b2Vec2(0.0f, 0.0f);
   ground_body_def.angle = 0;
   ground_body_def.type = b2_staticBody;
   b2Body* ground_body = world_->CreateBody(&ground_body_def);
 
-  b2PolygonShape ground_box;
-  ground_box.SetAsBox(45.0f, 1.0f);
-  ground_body->CreateFixture(&ground_box, 0.0f);
+  b2Vec2 corners[4];
+
+  corners[0].Set((float) -screen_width_ * px_to_m / 2, (float) screen_height_* px_to_m / 2);
+  corners[1].Set((float) -screen_width_ * px_to_m / 2, (float) -screen_height_* px_to_m);
+  corners[2].Set((float) screen_width_ * px_to_m / 2, (float) -screen_height_* px_to_m);
+  corners[3].Set((float) px_to_m * screen_width_ / 2, (float) screen_height_* px_to_m / 2);
+
+  b2ChainShape boundary_chain;
+  boundary_chain.CreateLoop(corners, 4);
+  ground_body->CreateFixture(&boundary_chain, 0.0f);
 
   // Creating the two platforms
   b2PolygonShape platform_box;
@@ -113,7 +120,7 @@ void mylibrary::Engine::CreateBoundaries() {
 
   for (int i = -1; i < 2; i += 2) {
     b2BodyDef platform_body_def;
-    platform_body_def.position = b2Vec2(25.0f * i, 12.0f);
+    platform_body_def.position = b2Vec2(25.0f * i, 13.0f);
     platform_body_def.angle = 0;
     platform_body_def.type = b2_staticBody;
     b2Body* platform_body = world_->CreateBody(&platform_body_def);
@@ -272,7 +279,9 @@ void Engine::Shoot(int x_px, int y_px) {
   }
 }
 
+int Engine::GetSecondsSinceStart() {
 
+}
 
 
 }
