@@ -293,12 +293,15 @@ int Engine::GetSecondsSinceStart() {
 }
 
 void Engine::DrawGui() {
-  std::string gui = std::to_string(player_.GetCooldownPercent())
-      + "Score: " + std::to_string(score_);
+  std::string gui = "Score: " + std::to_string(score_);
 
   cinder::gl::drawStringRight(gui, cinder::vec2(
       screen_width_,5),cinder::Color(1,
           1,1), cinder::Font(kNormalFont, 50));
+
+  cinder::Rectf cooldown_bar(0,0,
+      player_.GetCooldownPercent()*500, 50);
+  cinder::gl::drawSolidRect(cooldown_bar);
 
   if (over_) {
     b2Vec2 center = MeterCoordsToPxCoords(b2Vec2(0,0));
