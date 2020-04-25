@@ -8,6 +8,9 @@
 #include <cinder/Path2d.h>
 #include <vector>
 #include <cinder/gl/gl.h>
+#include <cinder/gl/Texture.h>
+#include <cinder/ImageIo.h>
+#include <experimental/filesystem>
 
 namespace mylibrary {
 
@@ -24,7 +27,17 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   Player player(world_);
   player_ = player;
   CreateBoundaries();
+  cinder::gl::Texture2d::Format image_format;
+
+
   start_time_ = std::chrono::system_clock::now();
+
+  cinder::gl::Texture::Format fmt;
+  fmt.setWrap(GL_REPEAT, GL_REPEAT);
+  background_texture_ = cinder::gl::Texture::create(cinder::
+      loadImage(R"(C:\Users\Aidan\CLionProjects\Cinder\my-projects\final-project-asochowski\assets\bkblue.png)"),
+      fmt);
+
 }
 
 Engine::Engine() {
@@ -57,6 +70,7 @@ void mylibrary::Engine::KeyRelease(int key_code) {
 void Engine::Draw() {
   DrawHitBoxes();
   DrawGui();
+  DrawBackground();
 }
 
 void mylibrary::Engine::Start() {
@@ -299,9 +313,13 @@ void Engine::DrawGui() {
       screen_width_,5),cinder::Color(1,
           1,1), cinder::Font(kNormalFont, 50));
 
-  cinder::Rectf cooldown_bar(0,0,
-      player_.GetCooldownPercent()*500, 50);
+  cinder::Rectf cooldown_bar_outline(20,20,20 +
+  (screen_width_ / 5),50);
+  cinder::Rectf cooldown_bar(20,20,
+      20 + (1 - player_.GetCooldownPercent()) *
+      (screen_width_) / 5, 50);
   cinder::gl::drawSolidRect(cooldown_bar);
+  cinder::gl::drawStrokedRect(cooldown_bar_outline);
 
   if (over_) {
     b2Vec2 center = MeterCoordsToPxCoords(b2Vec2(0,0));
@@ -328,6 +346,16 @@ void Engine::UpdateScore() {
 
 bool Engine::IsOver() {
   return over_;
+}
+
+void Engine::DrawBackground() {
+  int multiplier = 7;
+
+  cinder::Area background_rect(0, 0, screen_width_/2, screen_height_/2);
+
+  cinder::Rectf screen_area(0, 0, background_texture_->getWidth() * 30,
+      background_texture_->getHeight() * 20);
+  cinder::gl::draw(background_texture_, background_rect, screen_area);
 }
 
 }

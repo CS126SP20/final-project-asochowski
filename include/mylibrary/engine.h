@@ -12,7 +12,9 @@
 #include <set>
 #include <vector>
 #include <chrono>
-
+#include <cinder/gl/gl.h>
+#include <cinder/gl/Texture.h>
+#include <experimental/filesystem>
 
 namespace mylibrary {
 
@@ -70,10 +72,14 @@ private:
   int num_near_missed_ = 0;
   int score_ = 0;
 
+  // Textures
+  cinder::gl::TextureRef background_texture_;
+
   void UpdatePlayer();
   void CreateBoundaries();
   void DrawHitBoxes();
   void DrawGui();
+  void DrawBackground();
   void CheckDebrisCollisions();
   void CheckBullets();
   void CheckDebrisSpawn();
