@@ -27,15 +27,12 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   Player player(world_);
   player_ = player;
   CreateBoundaries();
-  cinder::gl::Texture2d::Format image_format;
-
-
   start_time_ = std::chrono::system_clock::now();
 
   cinder::gl::Texture::Format fmt;
   fmt.setWrap(GL_REPEAT, GL_REPEAT);
   background_texture_ = cinder::gl::Texture::create(cinder::
-      loadImage(R"(C:\Users\Aidan\CLionProjects\Cinder\my-projects\final-project-asochowski\assets\bkblue.png)"),
+      loadImage("C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-asochowski/assets/bkblue.png"),
       fmt);
 
 }
@@ -349,12 +346,13 @@ bool Engine::IsOver() {
 }
 
 void Engine::DrawBackground() {
-  int multiplier = 7;
+  int m_w = screen_width_ / background_texture_->getWidth();
+  int m_h = screen_height_ * 1.05 / background_texture_->getHeight();
 
-  cinder::Area background_rect(0, 0, screen_width_/2, screen_height_/2);
+  cinder::Area background_rect(0, 0, screen_width_ / 2, screen_height_ / 2);
 
-  cinder::Rectf screen_area(0, 0, background_texture_->getWidth() * 30,
-      background_texture_->getHeight() * 20);
+  cinder::Rectf screen_area(0, 0, background_texture_->getWidth() * m_w,
+      background_texture_->getHeight() * m_h);
   cinder::gl::draw(background_texture_, background_rect, screen_area);
 }
 

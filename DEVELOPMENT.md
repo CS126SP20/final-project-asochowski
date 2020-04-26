@@ -11,3 +11,8 @@
 - Bullets will delete debris in their path, and the player is knocked back whenever they shoot
 - Added debris spawning that increases in speed as the game goes on
 - The game ends when the player is hit by debris
+---
+# Week 2:
+- **4/25/20**: Added game scoring and background texture
+    - Need to add textures for all other objects
+- **4/26/20**: 
