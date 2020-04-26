@@ -356,4 +356,10 @@ void Engine::DrawBackground() {
   cinder::gl::draw(background_texture_, background_rect, screen_area);
 }
 
+void Engine::DrawDebris() {
+  for (Debris* debris: all_debris_) {
+    
+  }
+}
+
 }

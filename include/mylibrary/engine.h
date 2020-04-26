@@ -80,6 +80,7 @@ private:
   void DrawHitBoxes();
   void DrawGui();
   void DrawBackground();
+  void DrawDebris();
   void CheckDebrisCollisions();
   void CheckBullets();
   void CheckDebrisSpawn();

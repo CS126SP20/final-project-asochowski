@@ -31,7 +31,7 @@ namespace myapp {
   }
 
   void MyApp::draw() {
-//    cinder::gl::enableAlphaBlending();
+    cinder::gl::enableAlphaBlending();
     cinder::gl::clear();
 
     engine_.Draw();
