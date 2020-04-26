@@ -6,7 +6,7 @@
 
 namespace mylibrary {
 
-Animation::Animation(vector<cinder::gl::TextureRef>& textures) {
+Animation::Animation(mylibrary::TextureSheet& textures) {
   textures_ = textures;
   texture_index_ = 0;
   interval_ = -1;
@@ -28,10 +28,10 @@ cinder::gl::TextureRef& Animation::GetTexture() {
   if (interval_ > 0 && std::chrono::system_clock::now() - last_change_time_
   > std::chrono::milliseconds(interval_)) {
     last_change_time_ = std::chrono::system_clock::now();
-    texture_index_ = (texture_index_ + 1) % textures_.size();
+    texture_index_ = (texture_index_ + 1) % textures_.Size();
   }
 
-  return textures_.at(texture_index_);
+  return textures_.Get(texture_index_);
 }
 
 }

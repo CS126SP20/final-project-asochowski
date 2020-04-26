@@ -15,4 +15,4 @@
 # Week 2:
 - **4/25/20**: Added game scoring and background texture
     - Need to add textures for all other objects
-- **4/26/20**: 
+- **4/26/20**: Added animation class to handle changing textures, 
