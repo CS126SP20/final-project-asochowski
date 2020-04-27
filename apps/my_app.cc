@@ -29,10 +29,10 @@ namespace myapp {
   }
 
   void MyApp::draw() {
-    cinder::gl::enableDepthWrite();
-    cinder::gl::enableDepthRead();
-    cinder::gl::clear();
+    cinder::gl::clear(cinder::ColorA(0,0.2,0.1,0.5f));
+    cinder::gl::enableAlphaBlending();
 
+    engine_.UpdateMousePos(getWindow()->getMousePos());
     engine_.Draw();
   }
 

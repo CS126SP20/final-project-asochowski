@@ -18,6 +18,7 @@ namespace mylibrary {
 
   public:
     Animation(TextureSheet& textures);
+    Animation();
     void SetInterval(int milliseconds);
     void Start(int milliseconds);
     cinder::gl::TextureRef& GetTexture();

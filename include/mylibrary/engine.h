@@ -48,6 +48,7 @@ public:
   void End();
   bool IsRunning();
   bool IsOver();
+  void UpdateMousePos(const cinder::ivec2& px_pos);
   void Shoot(int x_px, int y_px);
   Player& GetPlayer();
   Debris* SpawnDebris(int x_px, int y_px);
@@ -71,10 +72,10 @@ private:
   int num_debris_shot_ = 0;
   int num_near_missed_ = 0;
   int score_ = 0;
+  cinder::ivec2 mouse_pos_;
 
   // Textures
   cinder::gl::TextureRef background_texture_;
-  cinder::gl::TextureRef player_texture_;
 
   void UpdatePlayer();
   void CreateBoundaries();

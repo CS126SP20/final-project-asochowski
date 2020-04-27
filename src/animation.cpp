@@ -12,6 +12,10 @@ Animation::Animation(mylibrary::TextureSheet& textures) {
   interval_ = -1;
 }
 
+Animation::Animation() {
+  // Do nothing
+}
+
 void Animation::Start(int milliseconds) {
   interval_ = milliseconds;
   texture_index_ = 0;
@@ -23,7 +27,6 @@ void Animation::SetInterval(int milliseconds) {
 }
 
 cinder::gl::TextureRef& Animation::GetTexture() {
-
   // Updates texture_index_ if time elapsed is greater than the interval
   if (interval_ > 0 && std::chrono::system_clock::now() - last_change_time_
   > std::chrono::milliseconds(interval_)) {

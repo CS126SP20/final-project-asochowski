@@ -21,6 +21,8 @@ Player::Player(b2World* world) {
 
   body_->CreateFixture(&box_fixture_def);
   last_shot_time_ = std::chrono::system_clock::now();
+
+  LoadAnimations();
 }
 
 Player::Player() {
@@ -72,6 +74,72 @@ float Player::GetCooldownPercent() {
         (std::chrono::system_clock::now() - last_shot_time_)).count()
         / (float) kShootCooldown;
   }
+}
+
+cinder::gl::TextureRef Player::GetTexture(bool left) {
+  if (dead_) {
+    return dead_animation_.GetTexture();
+  } else if (body_->GetLinearVelocity().y > 0) {
+    if (left) {
+      return fall_left_animation_.GetTexture();
+    }
+    return fall_right_animation_.GetTexture();
+  } else if (body_->GetLinearVelocity().y < 0) {
+    if (left) {
+      return rise_left_animation_.GetTexture();
+    }
+    return rise_right_animation_.GetTexture();
+  } else if (abs(body_->GetLinearVelocity().x) > 5) {
+    if (left) {
+      return run_left_animation_.GetTexture();
+    }
+    return run_right_animation_.GetTexture();
+  } else {
+    if (left) {
+      return stand_left_animation_.GetTexture();
+    }
+    return stand_right_animation_.GetTexture();
+  }
+}
+
+void Player::LoadAnimations() {
+  run_left_animation_ = *LoadAnimation(kTextureSize, kRunLeftCoordinates);
+  run_left_animation_.Start(100);
+
+  run_right_animation_ = *LoadAnimation(kTextureSize, kRunRightCoordinates);
+  run_right_animation_.Start(100);
+
+  rise_left_animation_ = *LoadAnimation(kTextureSize, kRiseLeftCoordinates);
+  rise_left_animation_.Start(100);
+
+  rise_right_animation_ = *LoadAnimation(kTextureSize, kRiseRightCoordinates);
+  rise_right_animation_.Start(100);
+
+  fall_left_animation_ = *LoadAnimation(kTextureSize, kFallLeftCoordinates);
+  fall_left_animation_.Start(100);
+
+  fall_right_animation_ = *LoadAnimation(kTextureSize, kFallRightCoordinates);
+  fall_right_animation_.Start(100);
+
+  stand_left_animation_ = *LoadAnimation(kTextureSize, kStandLeftCoordinates);
+  stand_left_animation_.Start(100);
+
+  stand_right_animation_ = *LoadAnimation(kTextureSize, kStandRightCoordinates);
+  stand_right_animation_.Start(100);
+
+  dead_animation_ = *LoadAnimation(kTextureSize, kDeadCoordinates);
+  dead_animation_.Start(100);
+}
+
+Animation* Player::LoadAnimation(int texture_size,
+    const std::vector<Coordinate>& coordinates) {
+  TextureSheet texture_sheet(texture_size, texture_size, coordinates, kTexturePath);
+  Animation* animation = new Animation(texture_sheet);
+  return animation;
+}
+
+void Player::Die() {
+  dead_ = true;
 }
 
 }  // namespace mylibrary
