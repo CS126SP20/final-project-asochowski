@@ -17,20 +17,27 @@ TextureSheet::TextureSheet(int width, int height,
   for (Coordinate& coordinate: texture_coordinates) {
 
     // Checking out of bounds errors
-    if ((coordinate.x + 1) * width - 1 > full_image->getWidth() ||
-        (coordinate.y + 1) * height - 1 > full_image->getHeight()) {
+    if ((coordinate.x + 1) * width > full_image->getWidth() ||
+        (coordinate.y + 1) * height > full_image->getHeight()) {
       throw -1;
     }
 
     // Gets only the texture at the coordinate
-    cinder::gl::TextureRef texture = cinder::gl::Texture::create(full_image);
+    cinder::gl::Texture::Format fmt;
+    fmt.enableMipmapping();
+    fmt.setMinFilter( GL_NEAREST_MIPMAP_NEAREST );
+    fmt.setMagFilter( GL_NEAREST );
+    fmt.setWrap( GL_CLAMP, GL_CLAMP );
+
+    cinder::gl::TextureRef texture = cinder::gl::Texture::create(full_image, fmt);
     cinder::Area texture_area(coordinate.x * width,
         coordinate.y * height,
-        (coordinate.x + 1) * width - 1,
-        (coordinate.y + 1) * height - 1);
+        (coordinate.x + 1) * width,
+        (coordinate.y + 1) * height);
 
     // Sets textures bounds to only include one texture
     texture->setCleanBounds(texture_area);
+
     textures_.push_back(texture);
   }
 }

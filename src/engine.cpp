@@ -4,6 +4,7 @@
 
 #include <set>
 #include <mylibrary/engine.h>
+#include <mylibrary/texture_sheet.h>
 #include <cinder/app/KeyEvent.h>
 #include <cinder/Path2d.h>
 #include <vector>
@@ -35,6 +36,12 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
       loadImage("C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-asochowski/assets/bkblue.png"),
       fmt);
 
+  Coordinate coordinate{2,2};
+  std::vector<Coordinate> coordinates;
+  coordinates.push_back(coordinate);
+  TextureSheet player_texture(16, 16, coordinates,
+      "C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-asochowski/assets/mychar.png");
+  player_texture_ = player_texture.Get(0);
 }
 
 Engine::Engine() {
@@ -44,7 +51,7 @@ Engine::Engine() {
 
 void mylibrary::Engine::Step() {
   if (running_) {
-    CheckDebrisSpawn();
+//    CheckDebrisSpawn();
     CheckBullets();
     CheckDebrisCollisions();
     if (!over_) {
@@ -67,7 +74,10 @@ void mylibrary::Engine::KeyRelease(int key_code) {
 void Engine::Draw() {
   DrawHitBoxes();
   DrawGui();
+  cinder::gl::enableAlphaBlending();
+  DrawPlayer();
   DrawBackground();
+  cinder::gl::disableAlphaBlending();
 }
 
 void mylibrary::Engine::Start() {
@@ -354,12 +364,20 @@ void Engine::DrawBackground() {
   cinder::Rectf screen_area(0, 0, background_texture_->getWidth() * m_w,
       background_texture_->getHeight() * m_h);
   cinder::gl::draw(background_texture_, background_rect, screen_area);
+
 }
 
 void Engine::DrawDebris() {
   for (Debris* debris: all_debris_) {
-    
+
   }
+}
+
+void Engine::DrawPlayer() {
+  b2Vec2 px_pos = MeterCoordsToPxCoords(player_.GetBody()->GetPosition());
+  cinder::Area player_rect(px_pos.x - 40, px_pos.y - 40,
+      px_pos.x + 40, px_pos.y + 40);
+  cinder::gl::draw(player_texture_, player_rect);
 }
 
 }

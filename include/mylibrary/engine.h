@@ -74,6 +74,7 @@ private:
 
   // Textures
   cinder::gl::TextureRef background_texture_;
+  cinder::gl::TextureRef player_texture_;
 
   void UpdatePlayer();
   void CreateBoundaries();
@@ -81,6 +82,7 @@ private:
   void DrawGui();
   void DrawBackground();
   void DrawDebris();
+  void DrawPlayer();
   void CheckDebrisCollisions();
   void CheckBullets();
   void CheckDebrisSpawn();

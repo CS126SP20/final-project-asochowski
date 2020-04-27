@@ -13,8 +13,6 @@ namespace myapp {
   using cinder::app::KeyEvent;
 
   MyApp::MyApp() {
-    cinder::gl::enableDepthWrite();
-    cinder::gl::enableDepthRead();
 
     Engine engine(kWidth, kHeight);
     engine_ = engine;
@@ -31,7 +29,8 @@ namespace myapp {
   }
 
   void MyApp::draw() {
-    cinder::gl::enableAlphaBlending();
+    cinder::gl::enableDepthWrite();
+    cinder::gl::enableDepthRead();
     cinder::gl::clear();
 
     engine_.Draw();

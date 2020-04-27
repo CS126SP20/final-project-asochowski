@@ -15,4 +15,6 @@
 # Week 2:
 - **4/25/20**: Added game scoring and background texture
     - Need to add textures for all other objects
-- **4/26/20**: Added animation class to handle changing textures, 
+- **4/26/20**: Added animation class to handle changing textures, added TextureSheet class to parse images into multiple
+textures, added rendering without bilinear filtering.
+    - Need to correctly render transparent pixels, probably will use a shader to fix my current issue.
