@@ -37,8 +37,10 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   fmt.setMinFilter( GL_NEAREST_MIPMAP_NEAREST );
   fmt.setMagFilter( GL_NEAREST );
   background_texture_ = cinder::gl::Texture::create(cinder::
-      loadImage("C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-asochowski/assets/bkblue.png"),
+      loadImage("C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-asochowski/assets/bkgreen.png"),
       fmt);
+  Debris::LoadTexture();
+  Bullet::LoadTexture();
 }
 
 Engine::Engine() {
@@ -70,9 +72,12 @@ void mylibrary::Engine::KeyRelease(int key_code) {
 
 void Engine::Draw() {
   DrawBackground();
-  DrawHitBoxes();
+//  DrawHitBoxes();
   DrawGui();
   DrawPlayer();
+  DrawDebris();
+  DrawBullets();
+  DrawPlatforms();
 }
 
 void mylibrary::Engine::Start() {
@@ -152,6 +157,7 @@ void mylibrary::Engine::CreateBoundaries() {
     b2Body* platform_body = world_->CreateBody(&platform_body_def);
 
     platform_body->CreateFixture(&platform_box, 0.0f);
+    all_platforms_.push_back(platform_body);
   }
 }
 
@@ -359,17 +365,20 @@ void Engine::DrawBackground() {
   int m_w = screen_width_ / background_texture_->getWidth();
   int m_h = screen_height_ * 1.05 / background_texture_->getHeight();
 
-  cinder::Area background_rect(0, 0, screen_width_ / 2, screen_height_ / 2);
+  cinder::Area background_rect(0, 0, screen_width_ / 8, screen_height_ / 8);
 
   cinder::Rectf screen_area(0, 0, background_texture_->getWidth() * m_w,
       background_texture_->getHeight() * m_h);
-  cinder::gl::draw(background_texture_, cinder::Rectf(0,0,screen_width_, screen_height_));
+  cinder::gl::draw(background_texture_, background_rect, screen_area);
 
 }
 
 void Engine::DrawDebris() {
   for (Debris* debris: all_debris_) {
-
+    b2Vec2 px_pos = MeterCoordsToPxCoords(((*debris).GetBody()->GetPosition()));
+    cinder::Area debris_rect(px_pos.x - 65, px_pos.y - 65,
+                             px_pos.x + 65, px_pos.y + 65);
+    cinder::gl::draw((*debris).GetTexture(), debris_rect);
   }
 }
 
@@ -391,10 +400,51 @@ void Engine::DrawPlayer() {
   }
 
   cinder::gl::draw(player_.GetTexture(left), player_rect);
+}
 
+void Engine::DrawBullets() {
+  for (Bullet* bullet: all_bullets_) {
+    b2Vec2 px_pos = MeterCoordsToPxCoords(((*bullet).GetBody()->GetPosition()));
+    cinder::Area debris_rect(px_pos.x - 30, px_pos.y - 30,
+                             px_pos.x + 30, px_pos.y + 30);
+    cinder::gl::draw((*bullet).GetTexture(), debris_rect);
+  }
+}
 
+void Engine::DrawPlatforms() {
+  for (int i = 0; i < all_platforms_.size(); i++) {
+    b2Body* current_body = all_platforms_.at(i);
+    std::vector<b2Vec2> points;
+    cinder::Path2d body_path;
+    b2Vec2 pos = current_body->GetPosition();
 
+    for (int i = 0; i < ((b2PolygonShape*)current_body->GetFixtureList()->
+        GetShape())->GetVertexCount(); i++) {
 
+      b2Vec2 vertex = ((b2PolygonShape*)current_body->GetFixtureList()->
+          GetShape())->GetVertex(i);
+      float32 theta = current_body->GetAngle();
+
+      // Since Box2D only gives the fixture's original coordinates, the
+      // current position, and the current angle, we can use a rotation matrix
+      // to calculate the real vertex coordinate.
+      b2Vec2 real_vertex(cos(theta)*vertex.x - sin(theta)*vertex.y,
+                         sin(theta)*vertex.x + cos(theta)*vertex.y);
+      float real_x = m_to_px * (pos.x + real_vertex.x)
+                     + (float) screen_width_ / 2;
+      float real_y = m_to_px * (pos.y + real_vertex.y)
+                     + (float) screen_height_ / 2;
+
+      if (i == 0) {
+        body_path.moveTo(real_x, real_y);
+      } else {
+        body_path.lineTo(real_x, real_y);
+      }
+    }
+
+    body_path.close();
+    cinder::gl::draw(body_path);
+  }
 }
 
 }

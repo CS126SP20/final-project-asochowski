@@ -16,7 +16,7 @@ Debris::Debris(b2World *world, int x, int y, float r) {
   body_def.position.Set(x, y);
   body_def.angle = 0;
   body_ = world->CreateBody(&body_def);
-  body_->SetFixedRotation(false);
+  body_->SetFixedRotation(true);
 
   b2PolygonShape box_shape;
   box_shape.SetAsBox(r, r);
@@ -25,12 +25,14 @@ Debris::Debris(b2World *world, int x, int y, float r) {
   box_fixture_def.density = 10;
 
   body_->CreateFixture(&box_fixture_def);
-  body_->SetAngularVelocity(5);
   body_->SetLinearVelocity(b2Vec2(0, 20));
+
+  LoadAnimation();
 }
 
 Debris::~Debris() {
   body_->GetWorld()->DestroyBody(body_);
+
 }
 
 b2Body *Debris::GetBody() {
@@ -51,6 +53,25 @@ void Debris::SetNearMissed() {
 
 bool Debris::HasBeenNearMissed() {
   return near_missed_;
+}
+
+void Debris::LoadAnimation() {
+  Animation animation(debris_texture_sheet_);
+  animation_ = animation;
+  animation_.Start(100);
+}
+
+cinder::gl::TextureRef Debris::GetTexture() {
+  return animation_.GetTexture();
+}
+
+void Debris::LoadTexture() {
+  std::vector<Coordinate> coordinates;
+  for (int i = 0; i < kNumTextures; i++) {
+    coordinates.push_back({i, 7});
+  }
+  TextureSheet texture_sheet(kDebrisSize, kDebrisSize, coordinates, kDebrisTexture);
+  debris_texture_sheet_ = texture_sheet;
 }
 
 }

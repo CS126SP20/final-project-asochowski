@@ -42,6 +42,8 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
   body_->SetBullet(true);
 
   spawn_time_ = std::chrono::system_clock::now();
+
+  LoadAnimation();
 }
 
 Bullet::Bullet() {
@@ -66,4 +68,18 @@ int Bullet::GetMilliseconds() {
   return time_in_ms;
 }
 
+void Bullet::LoadTexture() {
+  TextureSheet texture_sheet(kBulletSize, kBulletSize, kBulletCoordinates,
+      kBulletTexture);
+  bullet_texture_sheet_ = texture_sheet;
+}
+
+cinder::gl::TextureRef Bullet::GetTexture() {
+  return animation_.GetTexture();
+}
+
+void Bullet::LoadAnimation() {
+  Animation animation(bullet_texture_sheet_);
+  animation_ = animation;
+  animation_.Start(50);}
 }

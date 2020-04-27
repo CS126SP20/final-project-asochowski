@@ -67,6 +67,7 @@ private:
   std::set<int> held_keys_;
   std::vector<Debris*> all_debris_;
   std::vector<Bullet*> all_bullets_;
+  std::vector<b2Body*> all_platforms_;
   std::chrono::time_point<std::chrono::system_clock> start_time_;
   std::chrono::time_point<std::chrono::system_clock> last_debris_time_;
   int num_debris_shot_ = 0;
@@ -84,6 +85,8 @@ private:
   void DrawBackground();
   void DrawDebris();
   void DrawPlayer();
+  void DrawBullets();
+  void DrawPlatforms();
   void CheckDebrisCollisions();
   void CheckBullets();
   void CheckDebrisSpawn();
