@@ -31,15 +31,7 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   CreateBoundaries();
   start_time_ = std::chrono::system_clock::now();
 
-  cinder::gl::Texture::Format fmt;
-  fmt.setWrap(GL_REPEAT, GL_REPEAT);
-  fmt.enableMipmapping();
-  fmt.setMinFilter( GL_NEAREST_MIPMAP_NEAREST );
-  fmt.setMagFilter( GL_NEAREST );
-  background_texture_ = cinder::gl::Texture::create(cinder::
-      loadImage(kBackgroundImagePath), fmt);
-  Debris::LoadTexture();
-  Bullet::LoadTexture();
+  LoadTextures();
 }
 
 Engine::Engine() {
@@ -252,20 +244,24 @@ void Engine::CheckDebrisCollisions() {
 void Engine::CheckBullets() {
   for (int i = all_bullets_.size() - 1; i >= 0; i--) {
     Bullet* bullet = all_bullets_.at(i);
+    auto current_element = all_bullets_.begin() + i;
+
+    // Deleting bullets that are 2.5 seconds old
+    if (bullet->GetMilliseconds() > kBulletLifetime) {
+      all_bullets_.erase(current_element);
+      delete bullet;
 
     // Deleting bullets that collide with a static body
-    if (bullet->GetBody()->GetContactList()) {
-      if (bullet->GetBody()->GetContactList()->other->GetType() == b2_staticBody) {
-        all_bullets_.erase(all_bullets_.begin()+i);
+    } else if (bullet->GetBody()->GetContactList()) {
+      b2Body* other_body = bullet->GetBody()->GetContactList()->other;
+
+      if (other_body->GetType() == b2_staticBody) {
+        all_bullets_.erase(current_element);
         delete bullet;
       }
     }
 
-    // Deleting bullets that are 2.5 seconds old
-    if (bullet->GetMilliseconds() > kBulletLifetime) {
-      all_bullets_.erase(all_bullets_.begin()+i);
-      delete bullet;
-    }
+
   }
 }
 
@@ -368,7 +364,6 @@ void Engine::CheckNearMisses() {
 }
 
 void Engine::UpdateScore() {
-
   // Calculating the score from the equation:
   // Score = ((# Near Misses) + 2*(# Shot Debris))*ln(seconds passed + 1.1)
   score_ =  (int) ((num_near_missed_ + 2 * num_debris_shot_) *
@@ -441,39 +436,40 @@ void Engine::DrawBullets() {
 }
 
 void Engine::DrawPlatforms() {
+  float width = m_to_px * kPlatformWidth;
+  float height = m_to_px * kPlatformHeight;
+
   for (int i = 0; i < all_platforms_.size(); i++) {
     b2Body* current_body = all_platforms_.at(i);
-    std::vector<b2Vec2> points;
-    cinder::Path2d body_path;
+
     b2Vec2 pos = current_body->GetPosition();
+    b2Vec2 px_pos = MeterCoordsToPxCoords(pos);
 
-    for (int i = 0; i < ((b2PolygonShape*)current_body->GetFixtureList()->
-        GetShape())->GetVertexCount(); i++) {
 
-      b2Vec2 vertex = ((b2PolygonShape*)current_body->GetFixtureList()->
-          GetShape())->GetVertex(i);
-      float32 theta = current_body->GetAngle();
+    cinder::Area platform_area(px_pos.x - width,
+        px_pos.y - 3 * height,
+        px_pos.x + width,
+        px_pos.y + height);
 
-      // Since Box2D only gives the fixture's original coordinates, the
-      // current position, and the current angle, we can use a rotation matrix
-      // to calculate the real vertex coordinate.
-      b2Vec2 real_vertex(cos(theta)*vertex.x - sin(theta)*vertex.y,
-                         sin(theta)*vertex.x + cos(theta)*vertex.y);
-      float real_x = m_to_px * (pos.x + real_vertex.x)
-                     + (float) screen_width_ / 2;
-      float real_y = m_to_px * (pos.y + real_vertex.y)
-                     + (float) screen_height_ / 2;
-
-      if (i == 0) {
-        body_path.moveTo(real_x, real_y);
-      } else {
-        body_path.lineTo(real_x, real_y);
-      }
-    }
-
-    body_path.close();
-    cinder::gl::draw(body_path);
+    cinder::gl::draw(platform_texture_, platform_area);
   }
+}
+
+void Engine::LoadTextures() {
+  cinder::gl::Texture::Format fmt;
+  fmt.setWrap(GL_REPEAT, GL_REPEAT);
+  fmt.enableMipmapping();
+  fmt.setMinFilter( GL_NEAREST_MIPMAP_NEAREST );
+  fmt.setMagFilter( GL_NEAREST );
+  background_texture_ = cinder::gl::Texture::create(cinder::
+      loadImage(kBackgroundImagePath), fmt);
+
+  TextureSheet platform_texture_sheet(80, 32, std::vector<Coordinate>{{0,2}},
+      kPlatformImagePath);
+  platform_texture_ = platform_texture_sheet.Get(0);
+
+  Debris::LoadTexture();
+  Bullet::LoadTexture();
 }
 
 }

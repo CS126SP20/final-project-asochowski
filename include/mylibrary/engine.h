@@ -38,6 +38,9 @@ const float kNearMissDistance = 15;
 const std::string kBackgroundImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
                                           "my-projects/final-project-asochowski"
                                           "/assets/bkblue.png";
+const std::string kPlatformImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
+                                       "my-projects/final-project-asochowski"
+                                       "/assets/prtgard.png";
 
 // Fonts
 const char kNormalFont[] = "Arial";
@@ -59,6 +62,9 @@ const float kPlatformHeight = 1.0f;
 
 class Engine {
 public:
+
+  // Creates the game engine given the current screen width and height, in
+  // pixels.
   Engine(int screen_width, int screen_height);
   Engine();
   void Step();
@@ -98,6 +104,7 @@ private:
 
   // Textures
   cinder::gl::TextureRef background_texture_;
+  cinder::gl::TextureRef platform_texture_;
 
   void UpdatePlayer();
   void CreateBoundaries();
@@ -113,6 +120,7 @@ private:
   void CheckDebrisSpawn();
   void CheckNearMisses();
   void UpdateScore();
+  void LoadTextures();
   std::chrono::milliseconds GetDebrisSpawnInterval();
   b2Vec2 PxCoordsToMeterCoords(b2Vec2);
   b2Vec2 MeterCoordsToPxCoords(b2Vec2);
