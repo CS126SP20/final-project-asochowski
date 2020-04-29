@@ -40,7 +40,7 @@ b2Vec2 Player::GetVelocity() {
 void Player::Jump() {
   if (body_->GetContactList()) {
     body_->SetLinearVelocity(b2Vec2(body_->GetLinearVelocity().x, 0));
-    body_->ApplyLinearImpulse(b2Vec2(0, -600),
+    body_->ApplyLinearImpulse(b2Vec2(0, -kJumpForce),
                               body_->GetWorldCenter());
   }
 }

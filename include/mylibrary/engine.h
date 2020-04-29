@@ -37,7 +37,7 @@ const float kNearMissDistance = 15;
 // Asset paths
 const std::string kBackgroundImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
                                           "my-projects/final-project-asochowski"
-                                          "/assets/bkblue.png";
+                                          "/assets/bkgreen.png";
 const std::string kPlatformImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
                                        "my-projects/final-project-asochowski"
                                        "/assets/prtgard.png";
