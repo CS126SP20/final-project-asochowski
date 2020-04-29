@@ -9,22 +9,33 @@
 
 namespace mylibrary {
 
-const float kPlayerRenderSize = 1 / 13.5;
+const float kPlayerRenderHeight = 80.0 / 1080.0;
+const float kPlayerRenderWidth = 80.0 / 1920.0;
 const int kShootCooldown = 1000;
-const int kTextureSize = 16;
-const std::string kTexturePath = "C:/Users/Aidan/CLionProjects/Cinder/"
+
+const int kPlayerTextureSize = 16;
+const int kPlayerAnimationMs = 100;
+const int kRunAnimationSpeedThreshold = 5;
+
+const std::string kPlayerTexturePath = "C:/Users/Aidan/CLionProjects/Cinder/"
                                  "my-projects/final-project-asochowski/"
                                  "assets/mychar.png";
 
-const std::vector<Coordinate> kRunLeftCoordinates = {{1,2},{2,2},
-                                                 {3,2},{4,2},
-                                                 {5,2},{0,2}};
+const std::vector<Coordinate> kRunLeftCoordinates = {{1,2},
+                                                     {2,2},
+                                                     {3,2},
+                                                     {4,2},
+                                                     {5,2},
+                                                     {0,2}};
 const std::vector<Coordinate> kStandLeftCoordinates = {{0,2}};
 const std::vector<Coordinate> kRiseLeftCoordinates = {{6,2}};
 const std::vector<Coordinate> kFallLeftCoordinates = {{5,2}};
-const std::vector<Coordinate> kRunRightCoordinates = {{1,3},{2,3},
-                                                      {3,3},{4,3},
-                                                      {5,3},{0,3}};
+const std::vector<Coordinate> kRunRightCoordinates = {{1,3},
+                                                      {2,3},
+                                                      {3,3},
+                                                      {4,3},
+                                                      {5,3},
+                                                      {0,3}};
 const std::vector<Coordinate> kStandRightCoordinates = {{0,3}};
 const std::vector<Coordinate> kRiseRightCoordinates = {{6,3}};
 const std::vector<Coordinate> kFallRightCoordinates = {{5,3}};
@@ -64,7 +75,7 @@ private:
 
   void LoadAnimations();
   Animation* LoadAnimation(int texture_size,
-                                   const std::vector<Coordinate>& coordinates);
+      const std::vector<Coordinate>& coordinates);
 
 };
 

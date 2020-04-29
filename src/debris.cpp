@@ -22,10 +22,9 @@ Debris::Debris(b2World *world, int x, int y, float r) {
   box_shape.SetAsBox(r, r);
   b2FixtureDef box_fixture_def;
   box_fixture_def.shape = &box_shape;
-  box_fixture_def.density = 10;
+  box_fixture_def.density = kDebrisDensity;
 
   body_->CreateFixture(&box_fixture_def);
-  body_->SetLinearVelocity(b2Vec2(0, 20));
 
   LoadAnimation();
 }
@@ -58,7 +57,7 @@ bool Debris::HasBeenNearMissed() {
 void Debris::LoadAnimation() {
   Animation animation(debris_texture_sheet_);
   animation_ = animation;
-  animation_.Start(50);
+  animation_.Start(kDebrisAnimationMs);
 }
 
 cinder::gl::TextureRef Debris::GetTexture() {
@@ -66,11 +65,8 @@ cinder::gl::TextureRef Debris::GetTexture() {
 }
 
 void Debris::LoadTexture() {
-  std::vector<Coordinate> coordinates;
-  for (int i = 0; i < kNumTextures; i++) {
-    coordinates.push_back({i, 3});
-  }
-  TextureSheet texture_sheet(kDebrisSize, kDebrisSize, coordinates, kDebrisTexture);
+  TextureSheet texture_sheet(kDebrisTextureSize, kDebrisTextureSize,
+      kDebrisCoordinates, kDebrisTexturePath);
   debris_texture_sheet_ = texture_sheet;
 }
 

@@ -11,13 +11,23 @@
 
 namespace mylibrary {
 
-const int kDebrisSize = 16;
+const int kDebrisTextureSize = 16;
 const int kNumTextures = 5;
-const std::string kDebrisTexture = "C:/Users/Aidan/CLionProjects/Cinder/"
+const float kDebrisRenderHeight = 130.0 / 1080.0;
+const float kDebrisRenderWidth = 130.0 / 1920.0;
+const float kDebrisDensity = 10.0f;
+const int kDebrisAnimationMs = 50;
+
+const std::string kDebrisTexturePath = "C:/Users/Aidan/CLionProjects/Cinder/"
                                  "my-projects/final-project-asochowski/"
                                  "assets/npcsym.png";
 
-const std::vector<Coordinate> kBulletCoordinates = {{0,2}};
+const std::vector<Coordinate> kDebrisCoordinates = {{0, 3},
+                                                    {1, 3},
+                                                    {2, 3},
+                                                    {3, 3},
+                                                    {4, 3}};
+
 static TextureSheet debris_texture_sheet_;
 
 class Debris {

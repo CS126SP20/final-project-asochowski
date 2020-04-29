@@ -19,6 +19,7 @@
 namespace mylibrary {
 
 const double kGravity = 5 * 9.8;
+const float kPixelToMeterRatio = 96.0f;
 
 // How much time goes by in each step of the world
 const float32 kTimeStep = 1.0f / 60.0f;
@@ -28,13 +29,33 @@ const float32 kTimeStep = 1.0f / 60.0f;
 const int32 kVelIterations = 20;
 const int32 kPosIterations = 20;
 
+// Bullet constants
 const int kMoveSpeed = 12;
 const int kBulletLifetime = 2500;
 const float kNearMissDistance = 15;
 
+// Asset paths
+const std::string kBackgroundImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
+                                          "my-projects/final-project-asochowski"
+                                          "/assets/bkblue.png";
+
+// Fonts
 const char kNormalFont[] = "Arial";
 const char kBoldFont[] = "Arial Bold";
 const char kDifferentFont[] = "Papyrus";
+
+// Debris spawn rate equation variables
+const int kIntercept = 1;
+const int kSlope = 20;
+const float kDebrisSize = 2.5f;
+const float kDebrisSpawnHeightMultiplier = 0.0925925926f;
+
+// Platform positioning
+const float kPlatformDy = 13.0f;
+const float kPlatformDx = 25.0f;
+const float kPlatformWidth = 5.0f;
+const float kPlatformHeight = 1.0f;
+
 
 class Engine {
 public:
@@ -77,7 +98,6 @@ private:
 
   // Textures
   cinder::gl::TextureRef background_texture_;
-  TextureSheet blaster_texture_;
 
   void UpdatePlayer();
   void CreateBoundaries();

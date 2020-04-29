@@ -89,7 +89,7 @@ cinder::gl::TextureRef Player::GetTexture(bool left) {
       return rise_left_animation_.GetTexture();
     }
     return rise_right_animation_.GetTexture();
-  } else if (abs(body_->GetLinearVelocity().x) > 5) {
+  } else if (abs(body_->GetLinearVelocity().x) > kRunAnimationSpeedThreshold) {
     if (left) {
       return run_left_animation_.GetTexture();
     }
@@ -103,37 +103,47 @@ cinder::gl::TextureRef Player::GetTexture(bool left) {
 }
 
 void Player::LoadAnimations() {
-  run_left_animation_ = *LoadAnimation(kTextureSize, kRunLeftCoordinates);
-  run_left_animation_.Start(100);
+  run_left_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kRunLeftCoordinates);
+  run_left_animation_.Start(kPlayerAnimationMs);
 
-  run_right_animation_ = *LoadAnimation(kTextureSize, kRunRightCoordinates);
-  run_right_animation_.Start(100);
+  run_right_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kRunRightCoordinates);
+  run_right_animation_.Start(kPlayerAnimationMs);
 
-  rise_left_animation_ = *LoadAnimation(kTextureSize, kRiseLeftCoordinates);
-  rise_left_animation_.Start(100);
+  rise_left_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kRiseLeftCoordinates);
+  rise_left_animation_.Start(kPlayerAnimationMs);
 
-  rise_right_animation_ = *LoadAnimation(kTextureSize, kRiseRightCoordinates);
-  rise_right_animation_.Start(100);
+  rise_right_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kRiseRightCoordinates);
+  rise_right_animation_.Start(kPlayerAnimationMs);
 
-  fall_left_animation_ = *LoadAnimation(kTextureSize, kFallLeftCoordinates);
-  fall_left_animation_.Start(100);
+  fall_left_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kFallLeftCoordinates);
+  fall_left_animation_.Start(kPlayerAnimationMs);
 
-  fall_right_animation_ = *LoadAnimation(kTextureSize, kFallRightCoordinates);
-  fall_right_animation_.Start(100);
+  fall_right_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kFallRightCoordinates);
+  fall_right_animation_.Start(kPlayerAnimationMs);
 
-  stand_left_animation_ = *LoadAnimation(kTextureSize, kStandLeftCoordinates);
-  stand_left_animation_.Start(100);
+  stand_left_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kStandLeftCoordinates);
+  stand_left_animation_.Start(kPlayerAnimationMs);
 
-  stand_right_animation_ = *LoadAnimation(kTextureSize, kStandRightCoordinates);
-  stand_right_animation_.Start(100);
+  stand_right_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kStandRightCoordinates);
+  stand_right_animation_.Start(kPlayerAnimationMs);
 
-  dead_animation_ = *LoadAnimation(kTextureSize, kDeadCoordinates);
-  dead_animation_.Start(100);
+  dead_animation_ = *LoadAnimation(kPlayerTextureSize,
+      kDeadCoordinates);
+  dead_animation_.Start(kPlayerAnimationMs);
 }
 
 Animation* Player::LoadAnimation(int texture_size,
     const std::vector<Coordinate>& coordinates) {
-  TextureSheet texture_sheet(texture_size, texture_size, coordinates, kTexturePath);
+  TextureSheet texture_sheet(texture_size, texture_size, coordinates,
+      kPlayerTexturePath);
   Animation* animation = new Animation(texture_sheet);
   return animation;
 }

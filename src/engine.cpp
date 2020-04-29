@@ -24,7 +24,7 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   world_ = new b2World(b2Vec2(0, kGravity));
   screen_width_ = screen_width;
   screen_height_ = screen_height;
-  m_to_px = (float) screen_width / 96;
+  m_to_px = (float) screen_width / kPixelToMeterRatio;
   px_to_m = 1.0f / m_to_px;
   Player player(world_);
   player_ = player;
@@ -37,14 +37,9 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   fmt.setMinFilter( GL_NEAREST_MIPMAP_NEAREST );
   fmt.setMagFilter( GL_NEAREST );
   background_texture_ = cinder::gl::Texture::create(cinder::
-      loadImage("C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-asochowski/assets/bkblue.png"),
-      fmt);
+      loadImage(kBackgroundImagePath), fmt);
   Debris::LoadTexture();
   Bullet::LoadTexture();
-  std::vector<Coordinate> coordinates = {{0,1}};
-  TextureSheet blaster_texture(20, 16, coordinates, "C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-aso"
-                                                           "chowski/assets/arms.png");
-  blaster_texture_ = blaster_texture;
 }
 
 Engine::Engine() {
@@ -114,7 +109,7 @@ void Engine::UpdateMousePos(const cinder::ivec2& px_pos) {
 Debris* Engine::SpawnDebris(int x_px, int y_px) {
   b2Vec2 coords = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
 
-  auto* debris = new Debris(world_, coords.x, coords.y, 2.5);
+  auto* debris = new Debris(world_, coords.x, coords.y, kDebrisSize);
   all_debris_.push_back(debris);
 
   return debris;
@@ -138,24 +133,29 @@ void mylibrary::Engine::CreateBoundaries() {
   ground_body_def.type = b2_staticBody;
   b2Body* ground_body = world_->CreateBody(&ground_body_def);
 
+  // Creating the corners of the screen
   b2Vec2 corners[4];
+  corners[0].Set((float) -screen_width_ * px_to_m / 2,
+      (float) screen_height_* px_to_m / 2);
+  corners[1].Set((float) -screen_width_ * px_to_m / 2,
+      (float) - screen_height_* px_to_m);
+  corners[2].Set((float) screen_width_ * px_to_m / 2,
+      (float) - screen_height_* px_to_m);
+  corners[3].Set((float) px_to_m * screen_width_ / 2,
+      (float) screen_height_* px_to_m / 2);
 
-  corners[0].Set((float) -screen_width_ * px_to_m / 2, (float) screen_height_* px_to_m / 2);
-  corners[1].Set((float) -screen_width_ * px_to_m / 2, (float) -screen_height_* px_to_m);
-  corners[2].Set((float) screen_width_ * px_to_m / 2, (float) -screen_height_* px_to_m);
-  corners[3].Set((float) px_to_m * screen_width_ / 2, (float) screen_height_* px_to_m / 2);
-
+  // Adding the border to the world
   b2ChainShape boundary_chain;
   boundary_chain.CreateLoop(corners, 4);
   ground_body->CreateFixture(&boundary_chain, 0.0f);
 
   // Creating the two platforms
   b2PolygonShape platform_box;
-  platform_box.SetAsBox(5.0f, 1.0f);
+  platform_box.SetAsBox(kPlatformWidth, kPlatformHeight);
 
   for (int i = -1; i < 2; i += 2) {
     b2BodyDef platform_body_def;
-    platform_body_def.position = b2Vec2(25.0f * i, 13.0f);
+    platform_body_def.position = b2Vec2(kPlatformDx * i, kPlatformDy);
     platform_body_def.angle = 0;
     platform_body_def.type = b2_staticBody;
     b2Body* platform_body = world_->CreateBody(&platform_body_def);
@@ -207,9 +207,7 @@ void Engine::DrawHitBoxes() {
           GetShape())->GetVertex(i);
       float32 theta = current_body->GetAngle();
 
-      // Since Box2D only gives the fixture's original coordinates, the
-      // current position, and the current angle, we can use a rotation matrix
-      // to calculate the real vertex coordinate.
+      // Using a rotation matrix to calculate rotation
       b2Vec2 real_vertex(cos(theta)*vertex.x - sin(theta)*vertex.y,
                          sin(theta)*vertex.x + cos(theta)*vertex.y);
       float real_x = m_to_px * (pos.x + real_vertex.x)
@@ -244,7 +242,7 @@ void Engine::CheckDebrisCollisions() {
       all_debris_.erase(all_debris_.begin()+i);
       delete debris;
     } else if (collisions_list && player_.IsBody(collisions_list->other)) {
-      all_debris_.erase(all_debris_.begin()+i);
+      all_debris_.erase(all_debris_.begin() + i);
       delete debris;
       End();
     }
@@ -277,8 +275,11 @@ void Engine::CheckDebrisSpawn() {
   auto time_since_last_spawn = current_time - last_debris_time_;
   auto spawn_interval = GetDebrisSpawnInterval();
 
+  // If the time since the last spawn is greater than the current spawn interval
+  // time, spawn debris at a random location.
   if (time_since_last_spawn >= spawn_interval) {
-    SpawnDebris(rand() % screen_width_,-100);
+    SpawnDebris(rand() % screen_width_,
+        -kDebrisSpawnHeightMultiplier * screen_height_);
     last_debris_time_ = std::chrono::system_clock::now();
   }
 }
@@ -290,10 +291,11 @@ std::chrono::milliseconds Engine::GetDebrisSpawnInterval() {
   int time_in_seconds = (std::chrono::duration_cast<std::chrono::seconds>
       (time_since_start)).count();
 
-  double current_spawn_speed = 1.0 + (double) time_in_seconds / 20.0;
-  int seconds_between_spawns = 1000.0 / current_spawn_speed;
+  // Determining delay between spawns from current spawn rate
+  double current_spawn_speed = kIntercept + (double) time_in_seconds / kSlope;
+  int milliseconds_between_spawns = 1000.0 / current_spawn_speed;
 
-  std::chrono::milliseconds milliseconds(seconds_between_spawns);
+  std::chrono::milliseconds milliseconds(milliseconds_between_spawns);
 
   return milliseconds;
 }
@@ -311,10 +313,15 @@ b2Vec2 Engine::MeterCoordsToPxCoords(b2Vec2 m_vec) {
 
 void Engine::Shoot(int x_px, int y_px) {
   if (player_.CanShoot() && !over_) {
+
+    // Spawns a bullet with a trajectory towards the mouse
     Bullet* bullet = SpawnBullet(x_px, y_px);
     b2Vec2 bullet_trajectory = bullet->GetTrajectory();
+
+    // Knocks player back, reset player shoot timer.
     b2Vec2 player_knockback_impulse =
-        b2Vec2(-50000 * bullet_trajectory.x, -50000 * bullet_trajectory.y);
+        b2Vec2(-kPlayerKnockbackForce * bullet_trajectory.x,
+            -kPlayerKnockbackForce * bullet_trajectory.y);
     player_.GetBody()->ApplyForceToCenter(player_knockback_impulse);
     player_.Shoot();
   }
@@ -325,6 +332,7 @@ int Engine::GetSecondsSinceStart() {
       (std::chrono::system_clock::now() - start_time_)).count();
 }
 
+// TODO: Make Better GUI
 void Engine::DrawGui() {
   std::string gui = "Score: " + std::to_string(score_);
 
@@ -353,12 +361,16 @@ void Engine::CheckNearMisses() {
     if (debris->GetDistanceFrom(player_.GetBody()) <=
     kNearMissDistance && !debris->HasBeenNearMissed()) {
       debris->SetNearMissed();
+
       num_near_missed_ += 1;
     }
   }
 }
 
 void Engine::UpdateScore() {
+
+  // Calculating the score from the equation:
+  // Score = ((# Near Misses) + 2*(# Shot Debris))*ln(seconds passed + 1.1)
   score_ =  (int) ((num_near_missed_ + 2 * num_debris_shot_) *
       log(GetSecondsSinceStart() + 1.1));
 }
@@ -369,30 +381,41 @@ bool Engine::IsOver() {
 
 void Engine::DrawBackground() {
   int m_w = screen_width_ / background_texture_->getWidth();
-  int m_h = screen_height_ * 1.05 / background_texture_->getHeight();
+  int m_h = screen_height_ * 1.5 / background_texture_->getHeight();
 
-  cinder::Area background_rect(0, 0, screen_width_ / 8, screen_height_ / 8);
+  cinder::Area background_rect(0, 0, screen_width_ / 8,
+      screen_height_ / 8);
 
-  cinder::Rectf screen_area(0, 0, background_texture_->getWidth() * m_w,
-      background_texture_->getHeight() * m_h);
+  cinder::Rectf screen_area(0, 0, background_texture_
+  ->getWidth() * m_w,background_texture_->getHeight() * m_h);
   cinder::gl::draw(background_texture_, background_rect, screen_area);
 
 }
 
 void Engine::DrawDebris() {
+  float debris_width = kDebrisRenderWidth * (float) screen_width_;
+  float debris_height = kDebrisRenderHeight * (float) screen_height_;
+
   for (Debris* debris: all_debris_) {
     b2Vec2 px_pos = MeterCoordsToPxCoords(((*debris).GetBody()->GetPosition()));
-    cinder::Area debris_rect(px_pos.x - 65, px_pos.y - 65,
-                             px_pos.x + 65, px_pos.y + 65);
+    cinder::Area debris_rect(px_pos.x - debris_width / 2,
+        px_pos.y - debris_height / 2,
+        px_pos.x + debris_width / 2,
+        px_pos.y + debris_height / 2);
     cinder::gl::draw((*debris).GetTexture(), debris_rect);
   }
 }
 
 void Engine::DrawPlayer() {
   b2Vec2 px_pos = MeterCoordsToPxCoords(player_.GetBody()->GetPosition());
-  cinder::Area player_rect(px_pos.x - 40, px_pos.y - 40,
-      px_pos.x + 40, px_pos.y + 40);
-  auto format = cinder::gl::Texture::Format{};
+
+  float player_width = kPlayerRenderWidth * (float) screen_width_;
+  float player_height = kPlayerRenderHeight * (float) screen_height_;
+
+  cinder::Area player_rect(px_pos.x - player_width / 2,
+      px_pos.y - player_height / 2,
+      px_pos.x + player_width / 2,
+      px_pos.y + player_height / 2);
 
   bool left = true;
   float theta = atan2((mouse_pos_.y - px_pos.y), (mouse_pos_.x - px_pos.x));
@@ -404,10 +427,15 @@ void Engine::DrawPlayer() {
 }
 
 void Engine::DrawBullets() {
+  float bullet_width = kBulletRenderWidth * (float) screen_width_;
+  float bullet_height = kBulletRenderHeight * (float) screen_height_;
+
   for (Bullet* bullet: all_bullets_) {
     b2Vec2 px_pos = MeterCoordsToPxCoords(((*bullet).GetBody()->GetPosition()));
-    cinder::Area debris_rect(px_pos.x - 50, px_pos.y - 50,
-                             px_pos.x + 50, px_pos.y + 50);
+    cinder::Area debris_rect(px_pos.x - bullet_width / 2,
+        px_pos.y - bullet_height / 2,
+        px_pos.x + bullet_width / 2,
+        px_pos.y + bullet_height / 2);
     cinder::gl::draw((*bullet).GetTexture(), debris_rect);
   }
 }

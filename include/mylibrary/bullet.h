@@ -11,10 +11,20 @@
 #include "mylibrary/texture_sheet.h"
 #include "mylibrary/animation.h"
 
+const float kBulletRenderHeight = 100.0 / 1080.0;
+const float kBulletRenderWidth = 100.0 / 1920.0;
+
+const int kPlayerKnockbackForce = 50000;
+const int kBulletVelocity = 75;
+const float kSpawnDistance = 4.5f;
+const float kBulletSize = 0.5f;
+const float kBulletDensity = 100000;
+const int kBulletAnimationMs = 75;
+
 const std::string kBulletTexture = "C:/Users/Aidan/CLionProjects/Cinder/"
                                    "my-projects/final-project-asochowski/"
                                    "assets/blade.png";
-const int kBulletSize = 25;
+const int kBulletTextureSize = 25;
 const std::vector<mylibrary::Coordinate> kBulletCoordinates = {{0,0},
                                                                {1,0},
                                                                {2,0},

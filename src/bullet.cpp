@@ -18,9 +18,10 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
   trajectory_ = trajectory;
 
   // Making bullet velocity and spawn position vectors
-  b2Vec2 velocity = b2Vec2(trajectory.x * 75, trajectory.y * 75);
-  b2Vec2 spawn_pos = b2Vec2(player_pos.x + 4.5 * trajectory.x,
-      player_pos.y + 4.5 * trajectory.y);
+  b2Vec2 velocity = b2Vec2(trajectory.x * kBulletVelocity,
+      trajectory.y * kBulletVelocity);
+  b2Vec2 spawn_pos = b2Vec2(player_pos.x + kSpawnDistance * trajectory.x,
+      player_pos.y + kSpawnDistance * trajectory.y);
 
   // Defining bullet body
   b2BodyDef body_def;
@@ -31,10 +32,10 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
   body_->SetFixedRotation(false);
 
   b2PolygonShape box_shape;
-  box_shape.SetAsBox(0.5,0.5);
+  box_shape.SetAsBox(kBulletSize, kBulletSize);
   b2FixtureDef box_fixture_def;
   box_fixture_def.shape = &box_shape;
-  box_fixture_def.density = 100000;
+  box_fixture_def.density = kBulletDensity;
 
   body_->CreateFixture(&box_fixture_def);
   body_->SetLinearVelocity(velocity);
@@ -69,8 +70,8 @@ int Bullet::GetMilliseconds() {
 }
 
 void Bullet::LoadTexture() {
-  TextureSheet texture_sheet(kBulletSize, kBulletSize, kBulletCoordinates,
-      kBulletTexture);
+  TextureSheet texture_sheet(kBulletTextureSize, kBulletTextureSize,
+      kBulletCoordinates, kBulletTexture);
   bullet_texture_sheet_ = texture_sheet;
 }
 
@@ -81,5 +82,5 @@ cinder::gl::TextureRef Bullet::GetTexture() {
 void Bullet::LoadAnimation() {
   Animation animation(bullet_texture_sheet_);
   animation_ = animation;
-  animation_.Start(75);}
+  animation_.Start(kBulletAnimationMs);}
 }

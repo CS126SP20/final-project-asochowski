@@ -13,14 +13,13 @@ namespace myapp {
   using cinder::app::KeyEvent;
 
   MyApp::MyApp() {
-
     Engine engine(kWidth, kHeight);
     engine_ = engine;
     engine_.Start();
   }
 
   void MyApp::setup() {
-
+    setFullScreen(kFullscreen);
     // stop here
   }
 

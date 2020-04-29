@@ -19,4 +19,6 @@
 textures, added rendering without bilinear filtering.
     - Need to correctly render transparent pixels, probably will use a shader to fix my current issue.
 - **4/27/20**: Fixed transparency issues, added player animation that faces the mouse, added debris and bullet
-animations, 
+animations.
+- **4/28/20**: Changed the bullet animation to a spinning blade, fixed resolution scaling issues, and cleaned up magic
+numbers.
