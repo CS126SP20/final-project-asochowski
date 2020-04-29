@@ -9,6 +9,7 @@
 
 namespace mylibrary {
 
+const float kPlayerRenderSize = 1 / 13.5;
 const int kShootCooldown = 1000;
 const int kTextureSize = 16;
 const std::string kTexturePath = "C:/Users/Aidan/CLionProjects/Cinder/"

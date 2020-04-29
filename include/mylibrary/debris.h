@@ -12,10 +12,10 @@
 namespace mylibrary {
 
 const int kDebrisSize = 16;
-const int kNumTextures = 15;
+const int kNumTextures = 5;
 const std::string kDebrisTexture = "C:/Users/Aidan/CLionProjects/Cinder/"
                                  "my-projects/final-project-asochowski/"
-                                 "assets/rock.png";
+                                 "assets/npcsym.png";
 
 const std::vector<Coordinate> kBulletCoordinates = {{0,2}};
 static TextureSheet debris_texture_sheet_;

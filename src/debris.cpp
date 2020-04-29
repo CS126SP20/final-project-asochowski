@@ -58,7 +58,7 @@ bool Debris::HasBeenNearMissed() {
 void Debris::LoadAnimation() {
   Animation animation(debris_texture_sheet_);
   animation_ = animation;
-  animation_.Start(100);
+  animation_.Start(50);
 }
 
 cinder::gl::TextureRef Debris::GetTexture() {
@@ -68,7 +68,7 @@ cinder::gl::TextureRef Debris::GetTexture() {
 void Debris::LoadTexture() {
   std::vector<Coordinate> coordinates;
   for (int i = 0; i < kNumTextures; i++) {
-    coordinates.push_back({i, 7});
+    coordinates.push_back({i, 3});
   }
   TextureSheet texture_sheet(kDebrisSize, kDebrisSize, coordinates, kDebrisTexture);
   debris_texture_sheet_ = texture_sheet;

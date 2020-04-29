@@ -18,7 +18,7 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
   trajectory_ = trajectory;
 
   // Making bullet velocity and spawn position vectors
-  b2Vec2 velocity = b2Vec2(trajectory.x * 300, trajectory.y * 300);
+  b2Vec2 velocity = b2Vec2(trajectory.x * 75, trajectory.y * 75);
   b2Vec2 spawn_pos = b2Vec2(player_pos.x + 4.5 * trajectory.x,
       player_pos.y + 4.5 * trajectory.y);
 
@@ -81,5 +81,5 @@ cinder::gl::TextureRef Bullet::GetTexture() {
 void Bullet::LoadAnimation() {
   Animation animation(bullet_texture_sheet_);
   animation_ = animation;
-  animation_.Start(50);}
+  animation_.Start(75);}
 }

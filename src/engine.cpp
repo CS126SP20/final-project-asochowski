@@ -37,10 +37,14 @@ mylibrary::Engine::Engine(int screen_width, int screen_height) {
   fmt.setMinFilter( GL_NEAREST_MIPMAP_NEAREST );
   fmt.setMagFilter( GL_NEAREST );
   background_texture_ = cinder::gl::Texture::create(cinder::
-      loadImage("C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-asochowski/assets/bkgreen.png"),
+      loadImage("C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-asochowski/assets/bkblue.png"),
       fmt);
   Debris::LoadTexture();
   Bullet::LoadTexture();
+  std::vector<Coordinate> coordinates = {{0,1}};
+  TextureSheet blaster_texture(20, 16, coordinates, "C:/Users/Aidan/CLionProjects/Cinder/my-projects/final-project-aso"
+                                                           "chowski/assets/arms.png");
+  blaster_texture_ = blaster_texture;
 }
 
 Engine::Engine() {
@@ -240,6 +244,8 @@ void Engine::CheckDebrisCollisions() {
       all_debris_.erase(all_debris_.begin()+i);
       delete debris;
     } else if (collisions_list && player_.IsBody(collisions_list->other)) {
+      all_debris_.erase(all_debris_.begin()+i);
+      delete debris;
       End();
     }
   }
@@ -389,12 +395,7 @@ void Engine::DrawPlayer() {
   auto format = cinder::gl::Texture::Format{};
 
   bool left = true;
-
   float theta = atan2((mouse_pos_.y - px_pos.y), (mouse_pos_.x - px_pos.x));
-  cinder::gl::drawLine(cinder::vec2(px_pos.x, px_pos.y),
-                       cinder::vec2(px_pos.x + 100*cos(theta),
-                                    px_pos.y + 100*sin(theta)));
-
   if (abs(theta) < M_PI / 2) {
     left = false;
   }
@@ -405,8 +406,8 @@ void Engine::DrawPlayer() {
 void Engine::DrawBullets() {
   for (Bullet* bullet: all_bullets_) {
     b2Vec2 px_pos = MeterCoordsToPxCoords(((*bullet).GetBody()->GetPosition()));
-    cinder::Area debris_rect(px_pos.x - 30, px_pos.y - 30,
-                             px_pos.x + 30, px_pos.y + 30);
+    cinder::Area debris_rect(px_pos.x - 50, px_pos.y - 50,
+                             px_pos.x + 50, px_pos.y + 50);
     cinder::gl::draw((*bullet).GetTexture(), debris_rect);
   }
 }

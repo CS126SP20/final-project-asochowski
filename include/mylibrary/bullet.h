@@ -13,11 +13,12 @@
 
 const std::string kBulletTexture = "C:/Users/Aidan/CLionProjects/Cinder/"
                                    "my-projects/final-project-asochowski/"
-                                   "assets/bullets.png";
-const int kBulletSize = 16;
-const std::vector<mylibrary::Coordinate> kBulletCoordinates = {{12,1},
-                                                               {13,1},
-                                                    {14,1}};
+                                   "assets/blade.png";
+const int kBulletSize = 25;
+const std::vector<mylibrary::Coordinate> kBulletCoordinates = {{0,0},
+                                                               {1,0},
+                                                               {2,0},
+                                                               {3,0}};
 static mylibrary::TextureSheet bullet_texture_sheet_;
 
 

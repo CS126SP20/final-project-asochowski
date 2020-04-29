@@ -77,6 +77,7 @@ private:
 
   // Textures
   cinder::gl::TextureRef background_texture_;
+  TextureSheet blaster_texture_;
 
   void UpdatePlayer();
   void CreateBoundaries();
