@@ -14,22 +14,43 @@ using std::vector;
 
 namespace mylibrary {
 
-  class Animation {
+class Animation {
 
-  public:
-    Animation(TextureSheet& textures);
-    Animation();
-    void SetInterval(int milliseconds);
-    void Start(int milliseconds);
-    cinder::gl::TextureRef& GetTexture();
+public:
 
-  private:
-    TextureSheet textures_;
-    int texture_index_;
-    int interval_;
-    std::chrono::time_point<std::chrono::system_clock> last_change_time_;
+  // Creates an animation object that will iterate through all of the textures
+  // (in order) inside the TextureSheet.
+  Animation(TextureSheet& textures);
 
-  };
+  // The empty constructor of an animation.
+  Animation();
+
+  // Allows you to set the interval between texture switches, in milliseconds.
+  void SetInterval(int milliseconds);
+
+  // Starts an animation at a specific interval, in milliseconds.
+  void Start(int milliseconds);
+
+  // Gets the current texture. If the time since the last texture change is
+  // greater than the current interval, it switches the current texture to the
+  // next texture.
+  cinder::gl::TextureRef& GetTexture();
+
+private:
+
+  // A TextureSheet object that stores all of the textures in the animation.
+  TextureSheet textures_;
+
+  // Stores the index of the current texture in the animation.
+  int texture_index_;
+
+  // Stores the interval set by Start() or SetInterval();
+  int interval_;
+
+  // The last time that the texture in the animation had changed.
+  std::chrono::time_point<std::chrono::system_clock> last_change_time_;
+
+};
 
 } // namespace mylibrary
 

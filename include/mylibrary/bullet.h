@@ -35,22 +35,51 @@ static mylibrary::TextureSheet bullet_texture_sheet_;
 namespace  mylibrary {
 
 class Bullet {
+
 public:
+
+  // The default bullet constructor.
   Bullet();
+
+  // The standard bullet constructor. Spawns a bullet given the players position
+  // and sets its velocity so it will eventually get to the target position.
   Bullet(b2World* world, const b2Vec2& player_pos, const b2Vec2& target_pos);
+
+  // The destructor for the bullet.
   ~Bullet();
+
+  // Returns a pointer to the b2Body of the bullet.
   b2Body* GetBody();
+
+  // Returns the b2Vec2 that the bullet is following. Will be a vector with a
+  // magnitude of 1.
   b2Vec2 GetTrajectory();
+
+  // Gets the amount of milliseconds the bullet has been active.
   int GetMilliseconds();
+
+  // Gets the current texture in the bullet animation.
   cinder::gl::TextureRef GetTexture();
+
+  // Loads the texture of the bullet object. MUST BE CALLED BEFORE ANY BULLET
+  // is created.
   static void LoadTexture();
 
 private:
+
+  // The b2Body representing the bullet in the world.
   b2Body* body_;
+
+  // The trajectory of the bullet.
   b2Vec2 trajectory_;
+
+  // The time at which the bullet was spawned into the world.
   std::chrono::time_point<std::chrono::system_clock> spawn_time_;
+
+  // The animation of the bullet.
   Animation animation_;
 
+  // Creates the animation object for the specific bullet, and starts it.
   void LoadAnimation();
 
 };
