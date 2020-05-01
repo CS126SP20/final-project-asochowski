@@ -38,7 +38,7 @@ public:
 
   // The main constructor of the debris. Spawns a Debris object at the position
   // (x,y) of radius r in the b2World.
-  Debris(b2World* world, int x, int y, float r);
+  Debris(b2World* world, int x, int y, float r, bool load_assets);
 
   // The destructor of the debris.
   ~Debris();

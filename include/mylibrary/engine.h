@@ -65,7 +65,7 @@ public:
 
   // Creates the game engine given the current screen width and height, in
   // pixels.
-  Engine(int screen_width, int screen_height);
+  Engine(int screen_width, int screen_height, bool load_assets);
 
   // Empty constructor of the engine.
   Engine();
@@ -118,6 +118,9 @@ public:
 
   // Returns the number of seconds since Start() was last called.
   int GetSecondsSinceStart();
+
+  // Resets the game as if it were created new.
+  void Reset();
 
 private:
 
@@ -186,6 +189,9 @@ private:
   // The platform texture reference.
   cinder::gl::TextureRef platform_texture_;
 
+  // Whether or not assets will be loaded from this engine.
+  bool load_assets_;
+
   // Tells the player object what keys are currently being pressed, and applies
   // forces in the appropriate directions given the current keys being pressed.
   void UpdatePlayer();
@@ -239,6 +245,9 @@ private:
   // and the debris is marked as already been near missed.
   void CheckNearMisses();
 
+  // Checks whether or not the player is pressing the reset key.
+  void CheckReset();
+
   // Calculates the score given the current number of near misses, the time, and
   // the number of debris that have been shot.
   void UpdateScore();
@@ -246,6 +255,9 @@ private:
   // Pre-loads all of the textures. This includes every texture but the player's
   // (the player's texture is loaded when it is constructed).
   void LoadTextures();
+
+  // Safely deletes all of the entities (debris and bullets) from the map.
+  void ClearEntities();
 
   // Converts a pixel coordinate to a meter coordinate.
   b2Vec2 PxCoordsToMeterCoords(b2Vec2);

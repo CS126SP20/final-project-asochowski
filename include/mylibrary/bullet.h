@@ -43,7 +43,8 @@ public:
 
   // The standard bullet constructor. Spawns a bullet given the players position
   // and sets its velocity so it will eventually get to the target position.
-  Bullet(b2World* world, const b2Vec2& player_pos, const b2Vec2& target_pos);
+  Bullet(b2World* world, const b2Vec2& player_pos, const b2Vec2& target_pos,
+      bool load_assets);
 
   // The destructor for the bullet.
   ~Bullet();

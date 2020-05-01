@@ -13,7 +13,7 @@ namespace myapp {
   using cinder::app::KeyEvent;
 
   MyApp::MyApp() {
-    Engine engine(kWidth, kHeight);
+    Engine engine(kWidth, kHeight, true);
     engine_ = engine;
     engine_.Start();
   }

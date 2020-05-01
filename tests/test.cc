@@ -15,7 +15,7 @@ using mylibrary::Bullet;
 using mylibrary::Debris;
 
 TEST_CASE("Player Movement", "[player][engine][input]") {
-  Engine engine(1280, 720);
+  Engine engine(1280, 720, false);
   Player& player = engine.GetPlayer();
   engine.Start();
 
@@ -51,7 +51,7 @@ TEST_CASE("Player Movement", "[player][engine][input]") {
 }
 
 TEST_CASE("Bullet", "[bullet][player][engine]") {
-  Engine engine(1280, 720);
+  Engine engine(1280, 720, false);
   Player& player = engine.GetPlayer();
   engine.Start();
 
@@ -94,7 +94,7 @@ TEST_CASE("Bullet", "[bullet][player][engine]") {
 }
 
 TEST_CASE("Debris", "[debris][engine]") {
-  Engine engine(1280, 720);
+  Engine engine(1280, 720, false);
   Player& player = engine.GetPlayer();
   engine.Start();
 
@@ -103,7 +103,7 @@ TEST_CASE("Debris", "[debris][engine]") {
     engine.Step();
   }
 
-  SECTION("Debris hitting player ends game") {
+  SECTION("Debris hitting player kills player and R resets game") {
     engine.SpawnDebris(640,360);
 
     // Lets the debris fall on the player
@@ -111,7 +111,13 @@ TEST_CASE("Debris", "[debris][engine]") {
       engine.Step();
     }
 
-    REQUIRE(!engine.IsRunning());
+    REQUIRE(engine.IsOver());
+
+    engine.KeyPress(cinder::app::KeyEvent::KEY_r);
+    engine.Step();
+
+    REQUIRE(!engine.IsOver());
+    REQUIRE(engine.IsRunning());
   }
 
   SECTION("Debris is alive until collision") {
@@ -123,4 +129,43 @@ TEST_CASE("Debris", "[debris][engine]") {
       REQUIRE(debris->GetBody()->IsActive());
     }
   }
+}
+
+TEST_CASE("Shooting Cooldown", "[player][engine][bullet]") {
+  Engine engine(1280, 720, false);
+  Player& player = engine.GetPlayer();
+  engine.Start();
+
+  // Need to move about 2 seconds ahead because the player starts in the air
+  for (int i = 0; i < 120; i++) {
+    engine.Step();
+  }
+
+  SECTION("Player can't shoot right away") {
+    REQUIRE(player.GetCooldownPercent() > 0);
+  }
+
+  SECTION("Player can shoot after a second") {
+    // Wait a second of time
+    auto start_time = std::chrono::system_clock::now();
+    while (std::chrono::system_clock::now() - start_time <
+           std::chrono::seconds(1)) {
+      // Just wait a second because the shot has a 1 second starting cooldown
+    }
+
+    REQUIRE(player.GetCooldownPercent() == 1.0f);
+  }
+
+  SECTION("Shooting resets cooldown") {
+    // Wait a second of time
+    auto start_time = std::chrono::system_clock::now();
+    while (std::chrono::system_clock::now() - start_time <
+           std::chrono::seconds(1)) {
+      // Just wait a second because the shot has a 1 second starting cooldown
+    }
+
+    player.Shoot();
+    REQUIRE(player.GetCooldownPercent() == 0);
+  }
+
 }

@@ -5,7 +5,7 @@
 
 namespace mylibrary {
 
-Player::Player(b2World* world) {
+Player::Player(b2World* world, bool load_assets) {
   b2BodyDef body_def;
   body_def.type = b2_dynamicBody;
   body_def.position.Set(0, 0);
@@ -22,7 +22,9 @@ Player::Player(b2World* world) {
   body_->CreateFixture(&box_fixture_def);
   last_shot_time_ = std::chrono::system_clock::now();
 
-  LoadAnimations();
+  if (load_assets) {
+    LoadAnimations();
+  }
 }
 
 Player::Player() {
@@ -150,6 +152,14 @@ Animation* Player::LoadAnimation(int texture_size,
 
 void Player::Die() {
   dead_ = true;
+}
+
+void Player::Reset() {
+  body_->SetTransform(b2Vec2(0,0),body_->GetAngle());
+  body_->SetLinearVelocity(b2Vec2_zero);
+  body_->SetAwake(true);
+  dead_ = false;
+  last_shot_time_ = std::chrono::system_clock::now();
 }
 
 }  // namespace mylibrary

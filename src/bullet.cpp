@@ -7,7 +7,7 @@
 namespace mylibrary {
 
 Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
-    const b2Vec2& target_pos) {
+    const b2Vec2& target_pos, bool load_assets) {
 
   // Calculating trajectory
   b2Vec2 trajectory(target_pos.x - player_pos.x,
@@ -44,7 +44,9 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
 
   spawn_time_ = std::chrono::system_clock::now();
 
-  LoadAnimation();
+  if (load_assets) {
+    LoadAnimation();
+  }
 }
 
 Bullet::Bullet() {

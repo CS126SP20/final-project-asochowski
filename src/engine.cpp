@@ -20,18 +20,22 @@ namespace mylibrary {
 // Public Functions
 //==============================================================================
 
-mylibrary::Engine::Engine(int screen_width, int screen_height) {
+mylibrary::Engine::Engine(int screen_width, int screen_height,
+    bool load_assets) {
   world_ = new b2World(b2Vec2(0, kGravity));
   screen_width_ = screen_width;
   screen_height_ = screen_height;
   m_to_px = (float) screen_width / kPixelToMeterRatio;
   px_to_m = 1.0f / m_to_px;
-  Player player(world_);
+  Player player(world_, load_assets);
   player_ = player;
   CreateBoundaries();
   start_time_ = std::chrono::system_clock::now();
 
-  LoadTextures();
+  load_assets_ = load_assets;
+  if (load_assets) {
+    LoadTextures();
+  }
 }
 
 Engine::Engine() {
@@ -41,6 +45,7 @@ Engine::Engine() {
 
 void mylibrary::Engine::Step() {
   if (running_) {
+    CheckReset();
     CheckDebrisSpawn();
     CheckBullets();
     CheckDebrisCollisions();
@@ -62,18 +67,24 @@ void mylibrary::Engine::KeyRelease(int key_code) {
 }
 
 void Engine::Draw() {
-  DrawBackground();
-//  DrawHitBoxes();
-  DrawGui();
-  DrawPlayer();
-  DrawDebris();
-  DrawBullets();
-  DrawPlatforms();
+  if (load_assets_) {
+    DrawBackground();
+    //  DrawHitBoxes();
+    DrawGui();
+    DrawPlayer();
+    DrawDebris();
+    DrawBullets();
+    DrawPlatforms();
+  }
 }
 
 void mylibrary::Engine::Start() {
   running_ = true;
+  over_ = false;
   start_time_ = std::chrono::system_clock::now();
+  score_ = 0;
+  num_near_missed_ = 0;
+  num_debris_shot_ = 0;
   last_debris_time_ = std::chrono::system_clock::now();
 }
 
@@ -94,6 +105,13 @@ void Engine::UpdateMousePos(const cinder::ivec2& px_pos) {
   mouse_pos_ = px_pos;
 }
 
+void Engine::Reset() {
+  ClearEntities();
+  player_.Reset();
+  held_keys_.erase(cinder::app::KeyEvent::KEY_r);
+  Start();
+}
+
 //==============================================================================
 // Private Functions
 //==============================================================================
@@ -101,7 +119,8 @@ void Engine::UpdateMousePos(const cinder::ivec2& px_pos) {
 Debris* Engine::SpawnDebris(int x_px, int y_px) {
   b2Vec2 coords = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
 
-  auto* debris = new Debris(world_, coords.x, coords.y, kDebrisSize);
+  auto* debris = new Debris(world_, coords.x, coords.y, kDebrisSize,
+      load_assets_);
   all_debris_.push_back(debris);
 
   return debris;
@@ -110,7 +129,8 @@ Debris* Engine::SpawnDebris(int x_px, int y_px) {
 Bullet* Engine::SpawnBullet(int x_px, int y_px) {
   b2Vec2 target = PxCoordsToMeterCoords(b2Vec2(x_px, y_px));
 
-  auto* bullet = new Bullet(world_, player_.GetBody()->GetPosition(), target);
+  auto* bullet = new Bullet(world_, player_.GetBody()->GetPosition(),
+      target, load_assets_);
   all_bullets_.push_back(bullet);
 
   return bullet;
@@ -445,7 +465,6 @@ void Engine::DrawPlatforms() {
     b2Vec2 pos = current_body->GetPosition();
     b2Vec2 px_pos = MeterCoordsToPxCoords(pos);
 
-
     cinder::Area platform_area(px_pos.x - width,
         px_pos.y - 3 * height,
         px_pos.x + width,
@@ -471,5 +490,31 @@ void Engine::LoadTextures() {
   Debris::LoadTexture();
   Bullet::LoadTexture();
 }
+
+void Engine::ClearEntities() {
+
+  // Clearing all bullets
+  for (int i = all_bullets_.size() - 1; i >= 0; i--) {
+    Bullet *bullet = all_bullets_.at(i);
+    all_bullets_.erase(all_bullets_.begin() + i);
+    delete bullet;
+  }
+
+  // Clearing all the debris
+  for (int i = all_debris_.size() - 1; i >= 0; i--) {
+    Debris* debris = all_debris_.at(i);
+    all_debris_.erase(all_debris_.begin() + i);
+    delete debris;
+  }
+
+}
+
+void Engine::CheckReset() {
+  if (held_keys_.find(cinder::app::KeyEvent::KEY_r)
+  != held_keys_.end()) {
+    Reset();
+  }
+}
+
 
 }

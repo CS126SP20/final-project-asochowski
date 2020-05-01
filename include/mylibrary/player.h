@@ -47,7 +47,7 @@ class Player {
 public:
 
   // The main constructor for the player. Creates the player in the b2World.
-  explicit Player(b2World* world);
+  explicit Player(b2World* world, bool load_assets);
 
   // The default constructor for the player.
   Player();
@@ -86,6 +86,9 @@ public:
 
   // Set the player to be dead.
   void Die();
+
+  // Resets the player to it's original state.
+  void Reset();
 
 private:
 

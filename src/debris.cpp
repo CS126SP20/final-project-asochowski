@@ -10,7 +10,7 @@ Debris::Debris() {
 
 }
 
-Debris::Debris(b2World *world, int x, int y, float r) {
+Debris::Debris(b2World *world, int x, int y, float r, bool load_assets) {
   b2BodyDef body_def;
   body_def.type = b2_dynamicBody;
   body_def.position.Set(x, y);
@@ -26,7 +26,9 @@ Debris::Debris(b2World *world, int x, int y, float r) {
 
   body_->CreateFixture(&box_fixture_def);
 
-  LoadAnimation();
+  if (load_assets) {
+    LoadAnimation();
+  }
 }
 
 Debris::~Debris() {
