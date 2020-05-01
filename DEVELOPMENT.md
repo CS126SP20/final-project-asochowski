@@ -22,4 +22,6 @@ textures, added rendering without bilinear filtering.
 animations.
 - **4/28/20**: Changed the bullet animation to a spinning blade, fixed resolution scaling issues, and cleaned up magic
 numbers.
-- **4/29/20**: Added platform textures, added comments describing all functions and variables in every header file,
+- **4/29/20**: Added platform textures, added comments describing all functions and variables in every header file.
+- **4/30/20**: Added more tests, added button to reset the game.
+    - Going to add better GUI textures and possibly a main menu.

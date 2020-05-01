@@ -112,6 +112,11 @@ void Engine::Reset() {
   Start();
 }
 
+int Engine::CalculateScore(int num_shot, int num_near_miss, double seconds) {
+  return (int) ((double) (num_near_miss + 2 * num_shot) *
+         log(seconds + 1.1));
+}
+
 //==============================================================================
 // Private Functions
 //==============================================================================
@@ -386,8 +391,8 @@ void Engine::CheckNearMisses() {
 void Engine::UpdateScore() {
   // Calculating the score from the equation:
   // Score = ((# Near Misses) + 2*(# Shot Debris))*ln(seconds passed + 1.1)
-  score_ =  (int) ((num_near_missed_ + 2 * num_debris_shot_) *
-      log(GetSecondsSinceStart() + 1.1));
+  score_ = CalculateScore(num_debris_shot_, num_near_missed_,
+      GetSecondsSinceStart());
 }
 
 bool Engine::IsOver() {
@@ -515,6 +520,5 @@ void Engine::CheckReset() {
     Reset();
   }
 }
-
 
 }

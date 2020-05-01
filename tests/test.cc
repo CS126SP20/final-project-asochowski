@@ -167,5 +167,40 @@ TEST_CASE("Shooting Cooldown", "[player][engine][bullet]") {
     player.Shoot();
     REQUIRE(player.GetCooldownPercent() == 0);
   }
+}
 
+TEST_CASE("Score Calculation", "[engine]") {
+  Engine engine(1280, 720, false);
+  Player& player = engine.GetPlayer();
+  engine.Start();
+
+  int random_1 = rand() % 100000;
+  int random_2 = rand() % 100000;
+  int random_3 = rand() % 100000;
+
+  SECTION("Game starts with zero score") {
+    REQUIRE(engine.CalculateScore(0, 0, 0) == 0);
+  }
+
+  SECTION("No score if no debris shot or near misses") {
+    REQUIRE(engine.CalculateScore(0, 0, 10000) == 0);
+  }
+
+  SECTION("Debris shot are worth a base of 2") {
+    REQUIRE(engine.CalculateScore(random_1, 0, exp(1) - 1.1) == random_1 * 2);
+  }
+
+  SECTION("Near misses are worth a base of 1") {
+    REQUIRE(engine.CalculateScore(0, random_2, exp(1) - 1.1) == random_2);
+  }
+
+  SECTION("Score is sum of debris score and near miss score") {
+    REQUIRE(engine.CalculateScore(random_1, random_2, exp(1) - 1.1) ==
+    random_2 + random_1 * 2);
+  }
+
+  SECTION("Score is multiplied by ln(seconds + 1.1)") {
+    REQUIRE(engine.CalculateScore(random_1, random_2, random_3) ==
+            (int) ((random_2 + random_1 * 2) * log(random_3 + 1.1)));
+  }
 }

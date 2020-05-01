@@ -122,6 +122,9 @@ public:
   // Resets the game as if it were created new.
   void Reset();
 
+  // Calculates the score given these values.
+  int CalculateScore(int num_shot, int num_near_miss, double seconds);
+
 private:
 
   // The world object that houses all the b2Body's and all the physics in the
