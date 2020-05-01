@@ -27,4 +27,11 @@ numbers.
     - Going to add better GUI textures and possibly a main menu.
 ---
 # Week 3:
-- **5/1/20**: 
+- **5/1/20**: Added a SoundManager class in order to keep track of the music that is being played and that needs to be
+looped. Also added sounds for whenever:
+    - Debris collides with the "bullet"
+    - There is a near miss
+    - Game music, game over music, and potential menu music.
+    
+    The next things to do is add a better GUI/game over screen, and add a main menu.
+ 
