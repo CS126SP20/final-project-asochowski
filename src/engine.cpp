@@ -32,7 +32,8 @@ mylibrary::Engine::Engine(int screen_width, int screen_height,
   CreateBoundaries();
   start_time_ = std::chrono::system_clock::now();
 
-  load_assets_ = load_assets;
+  SoundManager sound_manager(load_assets);
+  sound_manager_ = sound_manager;
   if (load_assets) {
     LoadTextures();
   }
@@ -55,6 +56,10 @@ void mylibrary::Engine::Step() {
       UpdateScore();
     }
     world_->Step(kTimeStep, kVelIterations, kPosIterations);
+  }
+
+  if (load_assets_) {
+    sound_manager_.CheckLoops();
   }
 }
 
@@ -86,9 +91,16 @@ void mylibrary::Engine::Start() {
   num_near_missed_ = 0;
   num_debris_shot_ = 0;
   last_debris_time_ = std::chrono::system_clock::now();
+  if (load_assets_) {
+    sound_manager_.StartGameMusic(true);
+  }
 }
 
 void mylibrary::Engine::End() {
+  if (load_assets_ && !over_) {
+    sound_manager_.StartGameOverMusic(true);
+  }
+
   player_.Die();
   over_ = true;
 }
@@ -137,6 +149,10 @@ Bullet* Engine::SpawnBullet(int x_px, int y_px) {
   auto* bullet = new Bullet(world_, player_.GetBody()->GetPosition(),
       target, load_assets_);
   all_bullets_.push_back(bullet);
+
+  if (load_assets_) {
+    sound_manager_.StartBulletShot();
+  }
 
   return bullet;
 }
@@ -253,14 +269,22 @@ void Engine::CheckDebrisCollisions() {
     // Delete debris that collide with a static body
     if (collisions_list && (collisions_list->other->GetType() == b2_staticBody
     || collisions_list->other->IsBullet())) {
+
       if (collisions_list->other->IsBullet()) {
         num_debris_shot_ += 1;
+
+        if (load_assets_) {
+          sound_manager_.StartDebrisDestroyed();
+        }
       }
+
       all_debris_.erase(all_debris_.begin()+i);
       delete debris;
+
     } else if (collisions_list && player_.IsBody(collisions_list->other)) {
       all_debris_.erase(all_debris_.begin() + i);
       delete debris;
+
       End();
     }
   }
@@ -382,6 +406,10 @@ void Engine::CheckNearMisses() {
     if (debris->GetDistanceFrom(player_.GetBody()) <=
     kNearMissDistance && !debris->HasBeenNearMissed()) {
       debris->SetNearMissed();
+
+      if (load_assets_) {
+        sound_manager_.StartNearMiss();
+      }
 
       num_near_missed_ += 1;
     }

@@ -9,6 +9,7 @@
 #include <mylibrary/player.h>
 #include <mylibrary/debris.h>
 #include <mylibrary/bullet.h>
+#include <mylibrary/sound_manager.h>
 #include <set>
 #include <vector>
 #include <chrono>
@@ -32,7 +33,7 @@ const int32 kPosIterations = 20;
 // Bullet constants
 const int kMoveSpeed = 12;
 const int kBulletLifetime = 2500;
-const float kNearMissDistance = 15;
+const float kNearMissDistance = 10;
 
 // Asset paths
 const std::string kBackgroundImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
@@ -194,6 +195,9 @@ private:
 
   // Whether or not assets will be loaded from this engine.
   bool load_assets_;
+
+  // The sound manager for the game.
+  SoundManager sound_manager_;
 
   // Tells the player object what keys are currently being pressed, and applies
   // forces in the appropriate directions given the current keys being pressed.

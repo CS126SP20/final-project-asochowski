@@ -25,3 +25,6 @@ numbers.
 - **4/29/20**: Added platform textures, added comments describing all functions and variables in every header file.
 - **4/30/20**: Added more tests, added button to reset the game.
     - Going to add better GUI textures and possibly a main menu.
+---
+# Week 3:
+- **5/1/20**: 

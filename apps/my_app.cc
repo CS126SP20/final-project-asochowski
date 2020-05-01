@@ -20,7 +20,6 @@ namespace myapp {
 
   void MyApp::setup() {
     setFullScreen(kFullscreen);
-    // stop here
   }
 
   void MyApp::update() {
