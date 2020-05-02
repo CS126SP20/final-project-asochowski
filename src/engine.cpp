@@ -75,11 +75,15 @@ void Engine::Draw() {
   if (load_assets_) {
     DrawBackground();
     //  DrawHitBoxes();
-    DrawGui();
-    DrawPlayer();
-    DrawDebris();
-    DrawBullets();
+    if (running_) {
+      DrawPlayer();
+      DrawDebris();
+      DrawBullets();
+    }
     DrawPlatforms();
+    if (running_) {
+      DrawGui();
+    }
   }
 }
 
@@ -377,27 +381,49 @@ int Engine::GetSecondsSinceStart() {
       (std::chrono::system_clock::now() - start_time_)).count();
 }
 
-// TODO: Make Better GUI
 void Engine::DrawGui() {
-  std::string gui = "Score: " + std::to_string(score_);
-
-  cinder::gl::drawStringRight(gui, cinder::vec2(
-      screen_width_,5),cinder::Color(1,
-          1,1), cinder::Font(kNormalFont, 50));
-
-  cinder::Rectf cooldown_bar_outline(20,20,20 +
-  (screen_width_ / 5),50);
-  cinder::Rectf cooldown_bar(20,20,
-      20 + (1 - player_.GetCooldownPercent()) *
-      (screen_width_) / 5, 50);
-  cinder::gl::drawSolidRect(cooldown_bar);
-  cinder::gl::drawStrokedRect(cooldown_bar_outline);
+  int font_size = kFontSizeMultiplier * screen_height_;
 
   if (over_) {
     b2Vec2 center = MeterCoordsToPxCoords(b2Vec2(0,0));
-    cinder::gl::drawStringCentered("Game Over", cinder::vec2(
-        center.x,center.y),cinder::Color(1,
-            0,0), cinder::Font(kNormalFont, 100));
+
+    cinder::Area text_box(center.x - (float) screen_width_ / 5.0f,
+        center.y - (float) screen_height_ / 5.0f,
+        center.x + (float) screen_width_ / 5.0f,
+        center.y + (float) screen_height_ / 5.0f);
+    cinder::gl::draw(text_box_texture_, text_box);
+
+    cinder::gl::drawStringCentered("GAME OVER", cinder::vec2(
+        center.x,center.y - screen_height_ / 8.0f),
+            cinder::Color(1,1,1),
+            cinder::Font(kNormalFont, font_size * 2));
+
+    cinder::gl::drawStringCentered("Your score is: "
+    + std::to_string(score_), cinder::vec2(
+        center.x,center.y),cinder::Color(1,1,1),
+            cinder::Font(kNormalFont, font_size));
+
+    cinder::gl::drawStringCentered("Press R to restart", cinder::vec2(
+        center.x,center.y + screen_height_ / 10.0f),
+            cinder::Color(1,1,1),
+            cinder::Font(kNormalFont, font_size));
+  } else {
+    std::string gui = "Score: " + std::to_string(score_);
+
+    cinder::gl::drawStringRight(gui, cinder::vec2(
+        screen_width_, screen_height_ / kTextOffset),
+            cinder::Color(1,1,1),
+            cinder::Font(kNormalFont, font_size));
+
+    // The Cooldown Bar
+
+    cinder::Rectf cooldown_bar(screen_width_ * kCooldownBarOffset,
+                               screen_width_ * kCooldownBarOffset,
+                               screen_width_ * kCooldownBarOffset +
+                               (1 - player_.GetCooldownPercent()) *
+                               (screen_width_) / 5,
+                               screen_width_ * kCooldownBarOffset * 2);
+    cinder::gl::drawSolidRect(cooldown_bar);
   }
 }
 
@@ -519,6 +545,10 @@ void Engine::LoadTextures() {
   TextureSheet platform_texture_sheet(80, 32, std::vector<Coordinate>{{0,2}},
       kPlatformImagePath);
   platform_texture_ = platform_texture_sheet.Get(0);
+
+  TextureSheet text_box_texture_sheet(22, 18, std::vector<Coordinate>{{0,0}},
+      kTextBoxImagePath);
+  text_box_texture_ = text_box_texture_sheet.Get(0);
 
   Debris::LoadTexture();
   Bullet::LoadTexture();

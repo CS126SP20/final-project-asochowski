@@ -11,8 +11,8 @@
 
 namespace mylibrary {
 
-const std::string kGameMusicPath = "last_cave.mp3";
-const std::string kGameOverMusicPath = "safety.mp3";
+const std::string kGameMusicPath = "pulse.mp3";
+const std::string kGameOverMusicPath = "mimiga_town.mp3";
 const std::string kMenuMusicPath = "menu.mp3";
 const std::string kDebrisSoundPath = "debris.wav";
 const std::string kThrowSoundPath = "throw.mp3";

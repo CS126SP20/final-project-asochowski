@@ -42,6 +42,9 @@ const std::string kBackgroundImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
 const std::string kPlatformImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
                                        "my-projects/final-project-asochowski"
                                        "/assets/prtgard.png";
+const std::string kTextBoxImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
+                                      "my-projects/final-project-asochowski"
+                                      "/assets/textbox.png";
 
 // Fonts
 const char kNormalFont[] = "Arial";
@@ -53,6 +56,9 @@ const int kIntercept = 1;
 const int kSlope = 20;
 const float kDebrisSize = 2.5f;
 const float kDebrisSpawnHeightMultiplier = 0.0925925926f;
+const float kCooldownBarOffset = 0.0138888889f;
+const float kFontSizeMultiplier = 0.0462962963f;
+const int kTextOffset = 216;
 
 // Platform positioning
 const float kPlatformDy = 13.0f;
@@ -192,6 +198,9 @@ private:
 
   // The platform texture reference.
   cinder::gl::TextureRef platform_texture_;
+
+  // The text box texture sheet.
+  cinder::gl::TextureRef text_box_texture_;
 
   // Whether or not assets will be loaded from this engine.
   bool load_assets_;

@@ -27,7 +27,7 @@ namespace myapp {
   }
 
   void MyApp::draw() {
-    cinder::gl::clear(cinder::ColorA(0,0.2,0.1,0.5f));
+    cinder::gl::clear();
     cinder::gl::enableAlphaBlending();
 
     engine_.UpdateMousePos(getWindow()->getMousePos());

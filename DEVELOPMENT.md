@@ -33,5 +33,6 @@ looped. Also added sounds for whenever:
     - There is a near miss
     - Game music, game over music, and potential menu music.
     
-    The next things to do is add a better GUI/game over screen, and add a main menu.
- 
+    The next things to do are add a better GUI/game over screen and add a main menu.
+- **5/2/20**: Added a refined "game over" screen. It now includes the score and instructions on how to restart. I also
+decided I will not be adding different GUI elements, as the current ones match the game over screen much better.
