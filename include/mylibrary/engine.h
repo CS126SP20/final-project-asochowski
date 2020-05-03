@@ -101,6 +101,9 @@ public:
   // Starts the engine. If it is not started, Step() will not do anything.
   void Start();
 
+  // Stops the engine.
+  void Stop();
+
   // Ends the game, but the game engine will continue to run.
   void End();
 

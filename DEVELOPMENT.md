@@ -36,3 +36,5 @@ looped. Also added sounds for whenever:
     The next things to do are add a better GUI/game over screen and add a main menu.
 - **5/2/20**: Added a refined "game over" screen. It now includes the score and instructions on how to restart. I also
 decided I will not be adding different GUI elements, as the current ones match the game over screen much better.
+- **5/3/20**: Added a title screen that shows on start, and also is shown when the player hits ESC while playing. If
+they hit ESC while in the title screen, the program terminates.

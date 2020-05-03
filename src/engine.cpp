@@ -6,6 +6,7 @@
 #include <mylibrary/engine.h>
 #include <mylibrary/texture_sheet.h>
 #include <cinder/app/KeyEvent.h>
+#include <cinder/app/msw/AppMsw.h>
 #include <cinder/Path2d.h>
 #include <vector>
 #include <cinder/gl/gl.h>
@@ -91,7 +92,7 @@ void Engine::Draw() {
   }
 }
 
-void mylibrary::Engine::Start() {
+void Engine::Start() {
   running_ = true;
   over_ = false;
   start_time_ = std::chrono::system_clock::now();
@@ -104,7 +105,16 @@ void mylibrary::Engine::Start() {
   }
 }
 
-void mylibrary::Engine::End() {
+void Engine::Stop() {
+  Reset();
+  if (load_assets_) {
+    sound_manager_.StopAll();
+    sound_manager_.StartMainMenuMusic(true);
+  }
+  running_ = false;
+}
+
+void Engine::End() {
   if (load_assets_ && !over_) {
     sound_manager_.StartGameOverMusic(true);
   }
@@ -541,12 +551,19 @@ void Engine::DrawPlatforms() {
 
 
 void Engine::DrawTitleScreen() {
+  int font_size = kFontSizeMultiplier * screen_height_;
+
   b2Vec2 center = MeterCoordsToPxCoords(b2Vec2(0,0));
   cinder::Area text_box(center.x - (float) screen_width_ / 4.0f,
                         center.y - (float) screen_width_ / 4.0f,
                         center.x + (float) screen_width_ / 4.0f,
                         center.y - (float) screen_width_ / 8.0f);
   cinder::gl::draw(title_texture_, text_box);
+
+  cinder::gl::drawStringCentered("LMB to begin, ESC to quit",
+      cinder::vec2(center.x,center.y),
+                                 cinder::Color(1,1,1),
+                                 cinder::Font(kNormalFont, font_size));
 }
 
 void Engine::LoadTextures() {
@@ -599,6 +616,9 @@ void Engine::CheckReset() {
   if (held_keys_.find(cinder::app::KeyEvent::KEY_r)
   != held_keys_.end()) {
     Reset();
+  } else if (held_keys_.find(cinder::app::KeyEvent::KEY_ESCAPE)
+  != held_keys_.end() && running_) {
+    Stop();
   }
 }
 
