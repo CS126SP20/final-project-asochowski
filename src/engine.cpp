@@ -44,6 +44,10 @@ Engine::Engine() {
   screen_width_ = 0;
 }
 
+Engine::~Engine() {
+  delete world_;
+}
+
 void mylibrary::Engine::Step() {
   if (running_) {
     CheckReset();
@@ -79,10 +83,10 @@ void Engine::Draw() {
       DrawPlayer();
       DrawDebris();
       DrawBullets();
-    }
-    DrawPlatforms();
-    if (running_) {
+      DrawPlatforms();
       DrawGui();
+    } else {
+      DrawTitleScreen();
     }
   }
 }
@@ -361,7 +365,9 @@ b2Vec2 Engine::MeterCoordsToPxCoords(b2Vec2 m_vec) {
 }
 
 void Engine::Shoot(int x_px, int y_px) {
-  if (player_.CanShoot() && !over_) {
+  if (!running_) {
+    Start();
+  } else if (player_.CanShoot() && !over_) {
 
     // Spawns a bullet with a trajectory towards the mouse
     Bullet* bullet = SpawnBullet(x_px, y_px);
@@ -533,6 +539,16 @@ void Engine::DrawPlatforms() {
   }
 }
 
+
+void Engine::DrawTitleScreen() {
+  b2Vec2 center = MeterCoordsToPxCoords(b2Vec2(0,0));
+  cinder::Area text_box(center.x - (float) screen_width_ / 4.0f,
+                        center.y - (float) screen_width_ / 4.0f,
+                        center.x + (float) screen_width_ / 4.0f,
+                        center.y - (float) screen_width_ / 8.0f);
+  cinder::gl::draw(title_texture_, text_box);
+}
+
 void Engine::LoadTextures() {
   cinder::gl::Texture::Format fmt;
   fmt.setWrap(GL_REPEAT, GL_REPEAT);
@@ -542,13 +558,20 @@ void Engine::LoadTextures() {
   background_texture_ = cinder::gl::Texture::create(cinder::
       loadImage(kBackgroundImagePath), fmt);
 
-  TextureSheet platform_texture_sheet(80, 32, std::vector<Coordinate>{{0,2}},
+  TextureSheet platform_texture_sheet(80, 32,
+      std::vector<Coordinate>{{0,2}},
       kPlatformImagePath);
   platform_texture_ = platform_texture_sheet.Get(0);
 
-  TextureSheet text_box_texture_sheet(22, 18, std::vector<Coordinate>{{0,0}},
+  TextureSheet text_box_texture_sheet(22, 18,
+      std::vector<Coordinate>{{0,0}},
       kTextBoxImagePath);
   text_box_texture_ = text_box_texture_sheet.Get(0);
+
+  TextureSheet title_texture_sheet(128, 32,
+      std::vector<Coordinate>{{0,0}},
+      kTitleImagePath);
+  title_texture_ = title_texture_sheet.Get(0);
 
   Debris::LoadTexture();
   Bullet::LoadTexture();
@@ -578,5 +601,6 @@ void Engine::CheckReset() {
     Reset();
   }
 }
+
 
 }

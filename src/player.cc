@@ -28,7 +28,7 @@ Player::Player(b2World* world, bool load_assets) {
 }
 
 Player::Player() {
-
+  // Do nothing
 }
 
 void Player::SetVelocity(b2Vec2 velocity) {
@@ -105,48 +105,48 @@ cinder::gl::TextureRef Player::GetTexture(bool left) {
 }
 
 void Player::LoadAnimations() {
-  run_left_animation_ = *LoadAnimation(kPlayerTextureSize,
+  run_left_animation_ = LoadAnimation(kPlayerTextureSize,
       kRunLeftCoordinates);
   run_left_animation_.Start(kPlayerAnimationMs);
 
-  run_right_animation_ = *LoadAnimation(kPlayerTextureSize,
+  run_right_animation_ = LoadAnimation(kPlayerTextureSize,
       kRunRightCoordinates);
   run_right_animation_.Start(kPlayerAnimationMs);
 
-  rise_left_animation_ = *LoadAnimation(kPlayerTextureSize,
+  rise_left_animation_ = LoadAnimation(kPlayerTextureSize,
       kRiseLeftCoordinates);
   rise_left_animation_.Start(kPlayerAnimationMs);
 
-  rise_right_animation_ = *LoadAnimation(kPlayerTextureSize,
+  rise_right_animation_ = LoadAnimation(kPlayerTextureSize,
       kRiseRightCoordinates);
   rise_right_animation_.Start(kPlayerAnimationMs);
 
-  fall_left_animation_ = *LoadAnimation(kPlayerTextureSize,
+  fall_left_animation_ = LoadAnimation(kPlayerTextureSize,
       kFallLeftCoordinates);
   fall_left_animation_.Start(kPlayerAnimationMs);
 
-  fall_right_animation_ = *LoadAnimation(kPlayerTextureSize,
+  fall_right_animation_ = LoadAnimation(kPlayerTextureSize,
       kFallRightCoordinates);
   fall_right_animation_.Start(kPlayerAnimationMs);
 
-  stand_left_animation_ = *LoadAnimation(kPlayerTextureSize,
+  stand_left_animation_ = LoadAnimation(kPlayerTextureSize,
       kStandLeftCoordinates);
   stand_left_animation_.Start(kPlayerAnimationMs);
 
-  stand_right_animation_ = *LoadAnimation(kPlayerTextureSize,
+  stand_right_animation_ = LoadAnimation(kPlayerTextureSize,
       kStandRightCoordinates);
   stand_right_animation_.Start(kPlayerAnimationMs);
 
-  dead_animation_ = *LoadAnimation(kPlayerTextureSize,
+  dead_animation_ = LoadAnimation(kPlayerTextureSize,
       kDeadCoordinates);
   dead_animation_.Start(kPlayerAnimationMs);
 }
 
-Animation* Player::LoadAnimation(int texture_size,
+Animation Player::LoadAnimation(int texture_size,
     const std::vector<Coordinate>& coordinates) {
   TextureSheet texture_sheet(texture_size, texture_size, coordinates,
       kPlayerTexturePath);
-  Animation* animation = new Animation(texture_sheet);
+  Animation animation(texture_sheet);
   return animation;
 }
 
@@ -161,5 +161,7 @@ void Player::Reset() {
   dead_ = false;
   last_shot_time_ = std::chrono::system_clock::now();
 }
+
+
 
 }  // namespace mylibrary

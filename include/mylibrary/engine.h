@@ -45,6 +45,9 @@ const std::string kPlatformImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
 const std::string kTextBoxImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
                                       "my-projects/final-project-asochowski"
                                       "/assets/textbox.png";
+const std::string kTitleImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
+                                    "my-projects/final-project-asochowski"
+                                    "/assets/title.png";
 
 // Fonts
 const char kNormalFont[] = "Arial";
@@ -76,6 +79,9 @@ public:
 
   // Empty constructor of the engine.
   Engine();
+
+  // Engine destructor.
+  ~Engine();
 
   // Moves the physics engine by one "tick" (about 1/60 of a second). All
   // objects are moved to their updated positions in the b2World.
@@ -202,6 +208,9 @@ private:
   // The text box texture sheet.
   cinder::gl::TextureRef text_box_texture_;
 
+  // The title's texture.
+  cinder::gl::TextureRef title_texture_;
+
   // Whether or not assets will be loaded from this engine.
   bool load_assets_;
 
@@ -236,6 +245,9 @@ private:
 
   // Draws the platform textures.
   void DrawPlatforms();
+
+  // Draws the title screen.
+  void DrawTitleScreen();
 
   // Checks all of the debris collisions, and deletes them if they are not
   // colliding with other debris.

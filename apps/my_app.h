@@ -26,7 +26,7 @@ const bool kFullscreen = true;
     void keyUp(cinder::app::KeyEvent) override;
     void mouseDown(cinder::app::MouseEvent) override;
   private:
-    Engine engine_;
+    Engine* engine_;
   };
 
 }  // namespace myapp

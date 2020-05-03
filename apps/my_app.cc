@@ -13,9 +13,7 @@ namespace myapp {
   using cinder::app::KeyEvent;
 
   MyApp::MyApp() {
-    Engine engine(kWidth, kHeight, true);
-    engine_ = engine;
-    engine_.Start();
+    engine_ = new Engine(kWidth, kHeight, true);
   }
 
   void MyApp::setup() {
@@ -23,28 +21,28 @@ namespace myapp {
   }
 
   void MyApp::update() {
-    engine_.Step();
+    (*engine_).Step();
   }
 
   void MyApp::draw() {
     cinder::gl::clear();
     cinder::gl::enableAlphaBlending();
 
-    engine_.UpdateMousePos(getWindow()->getMousePos());
-    engine_.Draw();
+    (*engine_).UpdateMousePos(getWindow()->getMousePos());
+    (*engine_).Draw();
   }
 
   void MyApp::keyDown(KeyEvent event) {
-    engine_.KeyPress(event.getCode());
+    (*engine_).KeyPress(event.getCode());
   }
 
   void MyApp::keyUp(KeyEvent event) {
-    engine_.KeyRelease(event.getCode());
+    (*engine_).KeyRelease(event.getCode());
   }
 
   void MyApp::mouseDown(cinder::app::MouseEvent event) {
     if (event.isLeftDown()) {
-      engine_.Shoot(event.getX(), event.getY());
+      (*engine_).Shoot(event.getX(), event.getY());
     }
   }
 

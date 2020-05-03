@@ -133,7 +133,7 @@ private:
 
   // Loads an animation, given a texture size and the coordinates of the
   // animation. Returns a pointer to the animation object.
-  Animation* LoadAnimation(int texture_size,
+  Animation LoadAnimation(int texture_size,
       const std::vector<Coordinate>& coordinates);
 
 };

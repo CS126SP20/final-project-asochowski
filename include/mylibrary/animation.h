@@ -25,6 +25,9 @@ public:
   // The empty constructor of an animation.
   Animation();
 
+  // The Animation destructor
+  ~Animation();
+
   // Allows you to set the interval between texture switches, in milliseconds.
   void SetInterval(int milliseconds);
 

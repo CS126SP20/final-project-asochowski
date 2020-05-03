@@ -16,6 +16,10 @@ Animation::Animation() {
   // Do nothing
 }
 
+Animation::~Animation() {
+
+}
+
 void Animation::Start(int milliseconds) {
   interval_ = milliseconds;
   texture_index_ = 0;
@@ -36,5 +40,6 @@ cinder::gl::TextureRef& Animation::GetTexture() {
 
   return textures_.Get(texture_index_);
 }
+
 
 }
