@@ -18,9 +18,7 @@ const float kDebrisRenderWidth = 130.0 / 1920.0;
 const float kDebrisDensity = 10.0f;
 const int kDebrisAnimationMs = 50;
 
-const std::string kDebrisTexturePath = "C:/Users/Aidan/CLionProjects/Cinder/"
-                                 "my-projects/final-project-asochowski/"
-                                 "assets/npcsym.png";
+const std::string kDebrisTexturePath = "npcsym.png";
 
 const std::vector<Coordinate> kDebrisCoordinates = {{0, 3},
                                                     {1, 3},

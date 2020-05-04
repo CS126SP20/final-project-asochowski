@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <cinder/gl/Texture.h>
+#include <cinder/app/App.h>
 
 namespace mylibrary {
 

@@ -18,9 +18,7 @@ const int kPlayerAnimationMs = 100;
 const int kRunAnimationSpeedThreshold = 5;
 const int kJumpForce = 600;
 
-const std::string kPlayerTexturePath = "C:/Users/Aidan/CLionProjects/Cinder/"
-                                 "my-projects/final-project-asochowski/"
-                                 "assets/mychar.png";
+const std::string kPlayerTexturePath = "mychar.png";
 
 const std::vector<Coordinate> kRunLeftCoordinates = {{1,2},
                                                      {2,2},

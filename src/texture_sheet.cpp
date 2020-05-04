@@ -4,6 +4,7 @@
 
 #include "mylibrary/texture_sheet.h"
 
+
 namespace mylibrary {
 
 TextureSheet::TextureSheet(int width, int height,
@@ -11,7 +12,8 @@ TextureSheet::TextureSheet(int width, int height,
                            std::string path) {
 
   // Loading the whole image source
-  cinder::ImageSourceRef full_image = cinder::loadImage(path);
+  cinder::ImageSourceRef full_image = cinder::loadImage(
+      cinder::app::loadAsset(path));
 
   // Goes through each specified coordinate,
   for (Coordinate& coordinate: texture_coordinates) {
@@ -29,7 +31,8 @@ TextureSheet::TextureSheet(int width, int height,
     fmt.setMagFilter( GL_NEAREST );
     fmt.setWrap( GL_CLAMP, GL_CLAMP );
 
-    cinder::gl::TextureRef texture = cinder::gl::Texture::create(full_image, fmt);
+    cinder::gl::TextureRef texture = cinder::gl::Texture::create(full_image,
+        fmt);
     cinder::Area texture_area(coordinate.x * width,
         coordinate.y * height,
         (coordinate.x + 1) * width,

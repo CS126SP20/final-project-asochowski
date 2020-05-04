@@ -399,6 +399,7 @@ int Engine::GetSecondsSinceStart() {
 
 void Engine::DrawGui() {
   int font_size = kFontSizeMultiplier * screen_height_;
+  cinder::DataSourceRef font = cinder::app::loadAsset(kFontPath);
 
   if (over_) {
     b2Vec2 center = MeterCoordsToPxCoords(b2Vec2(0,0));
@@ -409,27 +410,27 @@ void Engine::DrawGui() {
         center.y + (float) screen_height_ / 5.0f);
     cinder::gl::draw(text_box_texture_, text_box);
 
-    cinder::gl::drawStringCentered("GAME OVER", cinder::vec2(
+    cinder::gl::drawStringCentered("GAME OVER!", cinder::vec2(
         center.x,center.y - screen_height_ / 8.0f),
             cinder::Color(1,1,1),
-            cinder::Font(kNormalFont, font_size * 2));
+            cinder::Font(font, font_size));
 
     cinder::gl::drawStringCentered("Your score is: "
     + std::to_string(score_), cinder::vec2(
         center.x,center.y),cinder::Color(1,1,1),
-            cinder::Font(kNormalFont, font_size));
+            cinder::Font(font, font_size / 2));
 
     cinder::gl::drawStringCentered("Press R to restart", cinder::vec2(
         center.x,center.y + screen_height_ / 10.0f),
             cinder::Color(1,1,1),
-            cinder::Font(kNormalFont, font_size));
+            cinder::Font(font, font_size / 2));
   } else {
     std::string gui = "Score: " + std::to_string(score_);
 
     cinder::gl::drawStringRight(gui, cinder::vec2(
         screen_width_, screen_height_ / kTextOffset),
             cinder::Color(1,1,1),
-            cinder::Font(kNormalFont, font_size));
+            cinder::Font(font, font_size / 2));
 
     // The Cooldown Bar
 
@@ -438,7 +439,7 @@ void Engine::DrawGui() {
                                screen_width_ * kCooldownBarOffset +
                                (1 - player_.GetCooldownPercent()) *
                                (screen_width_) / 5,
-                               screen_width_ * kCooldownBarOffset * 2);
+                               screen_width_ * kCooldownBarOffset * 3);
     cinder::gl::drawSolidRect(cooldown_bar);
   }
 }
@@ -562,8 +563,9 @@ void Engine::DrawTitleScreen() {
 
   cinder::gl::drawStringCentered("LMB to begin, ESC to quit",
       cinder::vec2(center.x,center.y),
-                                 cinder::Color(1,1,1),
-                                 cinder::Font(kNormalFont, font_size));
+      cinder::Color(1,1,1),
+      cinder::Font(cinder::app::loadAsset(kFontPath),
+          font_size));
 }
 
 void Engine::LoadTextures() {
@@ -573,7 +575,7 @@ void Engine::LoadTextures() {
   fmt.setMinFilter( GL_NEAREST_MIPMAP_NEAREST );
   fmt.setMagFilter( GL_NEAREST );
   background_texture_ = cinder::gl::Texture::create(cinder::
-      loadImage(kBackgroundImagePath), fmt);
+      loadImage(cinder::app::loadAsset(kBackgroundImagePath)), fmt);
 
   TextureSheet platform_texture_sheet(80, 32,
       std::vector<Coordinate>{{0,2}},

@@ -36,18 +36,11 @@ const int kBulletLifetime = 2500;
 const float kNearMissDistance = 10;
 
 // Asset paths
-const std::string kBackgroundImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
-                                          "my-projects/final-project-asochowski"
-                                          "/assets/bkgreen.png";
-const std::string kPlatformImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
-                                       "my-projects/final-project-asochowski"
-                                       "/assets/prtgard.png";
-const std::string kTextBoxImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
-                                      "my-projects/final-project-asochowski"
-                                      "/assets/textbox.png";
-const std::string kTitleImagePath = "C:/Users/Aidan/CLionProjects/Cinder/"
-                                    "my-projects/final-project-asochowski"
-                                    "/assets/title.png";
+const std::string kBackgroundImagePath = "bkgreen.png";
+const std::string kPlatformImagePath = "prtgard.png";
+const std::string kTextBoxImagePath = "textbox.png";
+const std::string kTitleImagePath = "title.png";
+const std::string kFontPath = "ARCADE_N.TTF";
 
 // Fonts
 const char kNormalFont[] = "Arial";
@@ -59,7 +52,7 @@ const int kIntercept = 1;
 const int kSlope = 20;
 const float kDebrisSize = 2.5f;
 const float kDebrisSpawnHeightMultiplier = 0.0925925926f;
-const float kCooldownBarOffset = 0.0138888889f;
+const float kCooldownBarOffset = 0.0138888889f * 0.5;
 const float kFontSizeMultiplier = 0.0462962963f;
 const int kTextOffset = 216;
 
