@@ -1,16 +1,17 @@
 # Development
 ---
 # Week 1:
-- Finished CMake and Box2D configuration
-- Created a Box2D world and a simple OpenGL rendering function (without rotation)
-- Consolidated the current functionality into engine.cc
-- Created a movable player that is controllable with WASD and space
-- Added OpenGL rendering that supports rotated objects
-- Created debris objects that are deleted whenever they collide with a static body or a player
-- The player can shoot a bullet by clicking and the bullet will move in the direction of the mouse
-- Bullets will delete debris in their path, and the player is knocked back whenever they shoot
-- Added debris spawning that increases in speed as the game goes on
-- The game ends when the player is hit by debris
+- **4/17/20**: Finished CMake and Box2D configuration, created a Box2D world and a simple OpenGL rendering function 
+(without rotation).
+- **4/18/20**: Consolidated the current functionality into engine.cc, created a movable player that is controllable with
+ WASD and space, added OpenGL rendering that supports rotated objects, created debris objects that are deleted whenever 
+ they collide with a static body or a player, the player can shoot a bullet by clicking and the bullet will move in the 
+ direction of the mouse.
+ - **4/19/20**: Bullets now delete debris in their path, and the player is knocked back whenever they shoot and added 
+ debris spawning that increases in speed as the game goes on.
+- **4/21/20**: The game ends when the player is hit by debris, adjusted debris spawning algorithm, and added tests for
+the player movement, the engine, the bullet, and the debris.
+- **4/24/20**: Added boundary walls.
 ---
 # Week 2:
 - **4/25/20**: Added game scoring and background texture
@@ -38,3 +39,5 @@ looped. Also added sounds for whenever:
 decided I will not be adding different GUI elements, as the current ones match the game over screen much better.
 - **5/3/20**: Added a title screen that shows on start, and also is shown when the player hits ESC while playing. If
 they hit ESC while in the title screen, the program terminates.
+- **5/4/20**: Changed the font to fit with this project's aesthetic, changed the image loading method so that it accepts
+the relative path of the image and not the absolute path, added content to the README.md file,

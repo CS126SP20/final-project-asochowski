@@ -12,9 +12,9 @@
 using mylibrary::Engine;
 
 namespace myapp {
-  const int kWidth = 2560;
-  const int kHeight = 1440;
-const bool kFullscreen = true;
+  const int kWidth = 1280;
+  const int kHeight = 720;
+const bool kFullscreen = false;
 
   class MyApp : public cinder::app::App {
   public:
