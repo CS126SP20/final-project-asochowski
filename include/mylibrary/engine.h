@@ -36,16 +36,11 @@ const int kBulletLifetime = 2500;
 const float kNearMissDistance = 10;
 
 // Asset paths
-const std::string kBackgroundImagePath = "bkgreen.png";
-const std::string kPlatformImagePath = "prtgard.png";
-const std::string kTextBoxImagePath = "textbox.png";
-const std::string kTitleImagePath = "title.png";
-const std::string kFontPath = "ARCADE_N.TTF";
-
-// Fonts
-const char kNormalFont[] = "Arial";
-const char kBoldFont[] = "Arial Bold";
-const char kDifferentFont[] = "Papyrus";
+const std::string kBackgroundImagePath = "images/bkgreen.png";
+const std::string kPlatformImagePath = "images/platform.png";
+const std::string kTextBoxImagePath = "images/textbox.png";
+const std::string kTitleImagePath = "images/title.png";
+const std::string kFontPath = "fonts/ARCADE_N.TTF";
 
 // Debris spawn rate equation variables
 const int kIntercept = 1;

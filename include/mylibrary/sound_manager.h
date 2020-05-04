@@ -11,12 +11,13 @@
 
 namespace mylibrary {
 
-const std::string kGameMusicPath = "pulse.mp3";
-const std::string kGameOverMusicPath = "mimiga_town.mp3";
-const std::string kMenuMusicPath = "menu.mp3";
-const std::string kDebrisSoundPath = "debris.wav";
-const std::string kThrowSoundPath = "throw.mp3";
-const std::string kNearMissSoundPath = "ding.wav";
+// The Paths for all audio assets.
+const std::string kGameMusicPath = "audio/pulse.mp3";
+const std::string kGameOverMusicPath = "audio/mimiga_town.mp3";
+const std::string kMenuMusicPath = "audio/menu.mp3";
+const std::string kDebrisSoundPath = "audio/debris.wav";
+const std::string kThrowSoundPath = "audio/throw.mp3";
+const std::string kNearMissSoundPath = "audio/ding.wav";
 
 class SoundManager {
 public:
@@ -69,17 +70,22 @@ private:
   // Stops all the sound effects.
   void StopAllSoundEffects();
 
+  // The volume.
   float volume_ = 0.1f;
 
+  // The Voice reference for game over music and its loop variable.
   cinder::audio::VoiceRef game_over_;
   bool loop_game_over_;
 
+  // The Voice reference for the main menu music and its loop variable.
   cinder::audio::VoiceRef main_menu_;
   bool loop_main_menu_;
 
+  // The Voice reference for game music and its loop variable.
   cinder::audio::VoiceRef game_;
   bool loop_game_;
 
+  // Voice references for all sound effects.
   cinder::audio::VoiceRef debris_destroy_;
   cinder::audio::VoiceRef bullet_shot_;
   cinder::audio::VoiceRef near_miss_;
