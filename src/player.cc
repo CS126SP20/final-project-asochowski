@@ -6,6 +6,8 @@
 namespace mylibrary {
 
 Player::Player(b2World* world, bool load_assets) {
+
+  // b2Body definition
   b2BodyDef body_def;
   body_def.type = b2_dynamicBody;
   body_def.position.Set(0, 0);
@@ -13,15 +15,18 @@ Player::Player(b2World* world, bool load_assets) {
   body_ = world->CreateBody(&body_def);
   body_->SetFixedRotation(true);
 
+  // b2Fixture definition.
   b2PolygonShape box_shape;
   box_shape.SetAsBox(2, 2);
   b2FixtureDef box_fixture_def;
   box_fixture_def.shape = &box_shape;
   box_fixture_def.density = 1;
 
+  // Adding the body to the world.
   body_->CreateFixture(&box_fixture_def);
   last_shot_time_ = std::chrono::system_clock::now();
 
+  // Loading the animations, if specified.
   if (load_assets) {
     LoadAnimations();
   }
@@ -40,6 +45,8 @@ b2Vec2 Player::GetVelocity() {
 }
 
 void Player::Jump() {
+
+  // If the player is in contact with the ground, jump.
   if (body_->GetContactList()) {
     body_->SetLinearVelocity(b2Vec2(body_->GetLinearVelocity().x, 0));
     body_->ApplyLinearImpulse(b2Vec2(0, -kJumpForce),
@@ -105,38 +112,40 @@ cinder::gl::TextureRef Player::GetTexture(bool left) {
 }
 
 void Player::LoadAnimations() {
+
+  // Loading right and left run animations.
   run_left_animation_ = LoadAnimation(kPlayerTextureSize,
       kRunLeftCoordinates);
   run_left_animation_.Start(kPlayerAnimationMs);
-
   run_right_animation_ = LoadAnimation(kPlayerTextureSize,
       kRunRightCoordinates);
   run_right_animation_.Start(kPlayerAnimationMs);
 
+  // Loading rise left and right animations.
   rise_left_animation_ = LoadAnimation(kPlayerTextureSize,
       kRiseLeftCoordinates);
   rise_left_animation_.Start(kPlayerAnimationMs);
-
   rise_right_animation_ = LoadAnimation(kPlayerTextureSize,
       kRiseRightCoordinates);
   rise_right_animation_.Start(kPlayerAnimationMs);
 
+  // Loading fall left and right animations.
   fall_left_animation_ = LoadAnimation(kPlayerTextureSize,
       kFallLeftCoordinates);
   fall_left_animation_.Start(kPlayerAnimationMs);
-
   fall_right_animation_ = LoadAnimation(kPlayerTextureSize,
       kFallRightCoordinates);
   fall_right_animation_.Start(kPlayerAnimationMs);
 
+  // Loading stand left and right animations.
   stand_left_animation_ = LoadAnimation(kPlayerTextureSize,
       kStandLeftCoordinates);
   stand_left_animation_.Start(kPlayerAnimationMs);
-
   stand_right_animation_ = LoadAnimation(kPlayerTextureSize,
       kStandRightCoordinates);
   stand_right_animation_.Start(kPlayerAnimationMs);
 
+  // Loading dead animation.
   dead_animation_ = LoadAnimation(kPlayerTextureSize,
       kDeadCoordinates);
   dead_animation_.Start(kPlayerAnimationMs);

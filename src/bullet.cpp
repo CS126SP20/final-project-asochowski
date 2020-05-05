@@ -35,12 +35,14 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
   body_ = world->CreateBody(&body_def);
   body_->SetFixedRotation(false);
 
+  // Defining bullet shape.
   b2PolygonShape box_shape;
   box_shape.SetAsBox(kBulletSize, kBulletSize);
   b2FixtureDef box_fixture_def;
   box_fixture_def.shape = &box_shape;
   box_fixture_def.density = kBulletDensity;
 
+  // Adding the body to the world with no gravity at a fixed speed.
   body_->CreateFixture(&box_fixture_def);
   body_->SetLinearVelocity(velocity);
   body_->SetGravityScale(0);
@@ -48,6 +50,7 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
 
   spawn_time_ = std::chrono::system_clock::now();
 
+  // Load the animations, if specified.
   if (load_assets) {
     LoadAnimation();
   }

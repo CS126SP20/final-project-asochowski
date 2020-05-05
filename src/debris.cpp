@@ -14,7 +14,9 @@ Debris::Debris() {
   // Do nothing
 }
 
-Debris::Debris(b2World *world, int x, int y, float r, bool load_assets) {
+Debris::Debris(b2World* world, int x, int y, float r, bool load_assets) {
+
+  // Defining the body.
   b2BodyDef body_def;
   body_def.type = b2_dynamicBody;
   body_def.position.Set(x, y);
@@ -22,14 +24,17 @@ Debris::Debris(b2World *world, int x, int y, float r, bool load_assets) {
   body_ = world->CreateBody(&body_def);
   body_->SetFixedRotation(true);
 
+  // Defining the shape.
   b2PolygonShape box_shape;
   box_shape.SetAsBox(r, r);
   b2FixtureDef box_fixture_def;
   box_fixture_def.shape = &box_shape;
   box_fixture_def.density = kDebrisDensity;
 
+  // Adding the body to the world.
   body_->CreateFixture(&box_fixture_def);
 
+  // Loading the animations if specified.
   if (load_assets) {
     LoadAnimation();
   }
@@ -37,7 +42,6 @@ Debris::Debris(b2World *world, int x, int y, float r, bool load_assets) {
 
 Debris::~Debris() {
   body_->GetWorld()->DestroyBody(body_);
-
 }
 
 b2Body *Debris::GetBody() {
