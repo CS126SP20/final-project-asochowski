@@ -11,24 +11,27 @@
 
 namespace mylibrary {
 
-const int kDebrisTextureSize = 16;
-const int kNumTextures = 5;
+// The render size of the debris.
 const float kDebrisRenderHeight = 130.0 / 1080.0;
 const float kDebrisRenderWidth = 130.0 / 1920.0;
+
+// Box2D physics body constants.
 const float kDebrisDensity = 10.0f;
 const int kDebrisAnimationMs = 50;
 
+// The debris texture's path, size, and coordinates.
 const std::string kDebrisTexturePath = "images/debris.png";
-
+const int kDebrisTextureSize = 16;
 const std::vector<Coordinate> kDebrisCoordinates = {{0, 3},
                                                     {1, 3},
                                                     {2, 3},
                                                     {3, 3},
                                                     {4, 3}};
 
-static TextureSheet debris_texture_sheet_;
-
+// An object representing a debris object in the world. Houses a b2Body and all
+// other variables pertaining to each debris.
 class Debris {
+
 public:
 
   // The default constructor.

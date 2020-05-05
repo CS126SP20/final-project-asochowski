@@ -16,10 +16,6 @@ Animation::Animation() {
   // Do nothing
 }
 
-Animation::~Animation() {
-
-}
-
 void Animation::Start(int milliseconds) {
   interval_ = milliseconds;
   texture_index_ = 0;

@@ -26,8 +26,8 @@ mylibrary::Engine::Engine(int screen_width, int screen_height,
   world_ = new b2World(b2Vec2(0, kGravity));
   screen_width_ = screen_width;
   screen_height_ = screen_height;
-  m_to_px = (float) screen_width / kPixelToMeterRatio;
-  px_to_m = 1.0f / m_to_px;
+  m_to_px_ = (float) screen_width / kPixelToMeterRatio;
+  px_to_m_ = 1.0f / m_to_px_;
   Player player(world_, load_assets);
   player_ = player;
   CreateBoundaries();
@@ -365,16 +365,16 @@ std::chrono::milliseconds Engine::GetDebrisSpawnInterval() {
 
 
 b2Vec2 Engine::PxCoordsToMeterCoords(b2Vec2 px_vec) {
-  return b2Vec2((px_vec.x - (float) screen_width_ / 2) * px_to_m,
-                (px_vec.y - (float) screen_height_ / 2) * px_to_m);
+  return b2Vec2((px_vec.x - (float) screen_width_ / 2) * px_to_m_,
+                (px_vec.y - (float) screen_height_ / 2) * px_to_m_);
 }
 
 b2Vec2 Engine::MeterCoordsToPxCoords(b2Vec2 m_vec) {
-  return b2Vec2( (m_to_px * m_vec.x) + (float) screen_width_ / 2,
-                 (m_to_px * m_vec.y) + (float) screen_height_ / 2);
+  return b2Vec2( (m_to_px_ * m_vec.x) + (float) screen_width_ / 2,
+                 (m_to_px_ * m_vec.y) + (float) screen_height_ / 2);
 }
 
-void Engine::Shoot(int x_px, int y_px) {
+void Engine::Click(int x_px, int y_px) {
   if (!running_) {
     Start();
   } else if (player_.CanShoot() && !over_) {

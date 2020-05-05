@@ -11,9 +11,13 @@
 #include "mylibrary/texture_sheet.h"
 #include "mylibrary/animation.h"
 
+namespace  mylibrary {
+
+// The render size of the bullet.
 const float kBulletRenderHeight = 100.0 / 1080.0;
 const float kBulletRenderWidth = 100.0 / 1920.0;
 
+// Constants that pertain to Box2D physics
 const int kPlayerKnockbackForce = 50000;
 const int kBulletVelocity = 75;
 const float kSpawnDistance = 4.5f;
@@ -21,17 +25,16 @@ const float kBulletSize = 0.5f;
 const float kBulletDensity = 100000;
 const int kBulletAnimationMs = 75;
 
-const std::string kBulletTexture = "images/blade.png";
+// The bullet texture's path, size, and coordinates.
+const std::string kBulletTexturePath = "images/blade.png";
 const int kBulletTextureSize = 25;
 const std::vector<mylibrary::Coordinate> kBulletCoordinates = {{0,0},
                                                                {1,0},
                                                                {2,0},
                                                                {3,0}};
-static mylibrary::TextureSheet bullet_texture_sheet_;
 
-
-namespace  mylibrary {
-
+// An object representing a bullet object in the world. Houses a b2Body and all
+// other variables pertaining to each bullet.
 class Bullet {
 
 public:

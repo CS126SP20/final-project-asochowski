@@ -19,7 +19,10 @@ const std::string kDebrisSoundPath = "audio/debris.wav";
 const std::string kThrowSoundPath = "audio/throw.mp3";
 const std::string kNearMissSoundPath = "audio/ding.wav";
 
+// An object that manages multiple different audio sources. Makes sure that only
+// one music track is being played once and can play various sound effects.
 class SoundManager {
+
 public:
 
   // Default sound manager constructor.

@@ -14,6 +14,8 @@ using std::vector;
 
 namespace mylibrary {
 
+// An object that cycles through all of the frames in a texture sheet at a
+// given interval.
 class Animation {
 
 public:
@@ -24,9 +26,6 @@ public:
 
   // The empty constructor of an animation.
   Animation();
-
-  // The Animation destructor
-  ~Animation();
 
   // Allows you to set the interval between texture switches, in milliseconds.
   void SetInterval(int milliseconds);

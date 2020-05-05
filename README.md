@@ -23,6 +23,11 @@ touching it). The game is over when you are hit by debris.
 - Clone the Quake Miner project into `/Cinder/my-projects/`.
 - You can now build this project using Cmake
 
+## Build Settings
+This game is only meant to be played at a 16:9 aspect ratio (i.e. 1920x1080, 1280x720). It defaults to running at 720p
+in windowed mode, however this may be changed by altering `kWidth` and `kHeight` in `/apps/my_app.h` of the project
+directory. You may also change `kFullscreen` in `/apps/m_app.h` to change whether or not the game is fullscreen.
+
 ## Controls
 
 ### Main Menu

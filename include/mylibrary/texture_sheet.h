@@ -11,12 +11,15 @@
 
 namespace mylibrary {
 
-// A struct representing a specific "coordinate" in a texture sheet.
+// A coordinate representing a specific frame in a texture sheet.
 struct Coordinate {
   int x;
   int y;
 };
 
+// An object that stores multiple textures from an image. Takes in an image and
+// a set of coordinates of a specific size, and parses them into individual
+// textures.
 class TextureSheet {
 
 public:

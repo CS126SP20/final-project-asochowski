@@ -6,6 +6,10 @@
 
 namespace mylibrary {
 
+// The texture sheet for the bullet animation. Only needs to be loaded once
+// for all bullets.
+static TextureSheet bullet_texture_sheet_;
+
 Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
     const b2Vec2& target_pos, bool load_assets) {
 
@@ -73,7 +77,7 @@ int Bullet::GetMilliseconds() {
 
 void Bullet::LoadTexture() {
   TextureSheet texture_sheet(kBulletTextureSize, kBulletTextureSize,
-      kBulletCoordinates, kBulletTexture);
+      kBulletCoordinates, kBulletTexturePath);
   bullet_texture_sheet_ = texture_sheet;
 }
 

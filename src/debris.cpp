@@ -6,8 +6,12 @@
 
 namespace mylibrary {
 
-Debris::Debris() {
+// The texture sheet for the debris animation. Only needs to be loaded once
+// for all debris.
+static TextureSheet debris_texture_sheet_;
 
+Debris::Debris() {
+  // Do nothing
 }
 
 Debris::Debris(b2World *world, int x, int y, float r, bool load_assets) {

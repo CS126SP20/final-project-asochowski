@@ -9,17 +9,23 @@
 
 namespace mylibrary {
 
+// The render size multiplier of the player.
 const float kPlayerRenderHeight = 80.0 / 1080.0;
 const float kPlayerRenderWidth = 80.0 / 1920.0;
-const int kShootCooldown = 1000;
 
-const int kPlayerTextureSize = 16;
-const int kPlayerAnimationMs = 100;
-const int kRunAnimationSpeedThreshold = 5;
+// Player shot cooldown and jump force.
+const int kShootCooldown = 1000;
 const int kJumpForce = 600;
 
+// Animation delay and speed threshold.
+const int kPlayerAnimationMs = 100;
+const int kRunAnimationSpeedThreshold = 5;
+
+// The texture size and path.
+const int kPlayerTextureSize = 16;
 const std::string kPlayerTexturePath = "images/player.png";
 
+// All of the different sets of coordinates for each animation.
 const std::vector<Coordinate> kRunLeftCoordinates = {{1,2},
                                                      {2,2},
                                                      {3,2},
@@ -40,7 +46,8 @@ const std::vector<Coordinate> kRiseRightCoordinates = {{6,3}};
 const std::vector<Coordinate> kFallRightCoordinates = {{5,3}};
 const std::vector<Coordinate> kDeadCoordinates = {{9,2}};
 
-
+// The object representing the player in the game. Houses a b2Body and can be
+// moved around. Also keeps track of shooting cooldown and its own animations.
 class Player {
 public:
 

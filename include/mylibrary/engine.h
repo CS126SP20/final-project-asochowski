@@ -19,6 +19,7 @@
 
 namespace mylibrary {
 
+// Gravity and the pixel to meter ratio.
 const double kGravity = 5 * 9.8;
 const float kPixelToMeterRatio = 96.0f;
 
@@ -57,8 +58,11 @@ const float kPlatformDx = 25.0f;
 const float kPlatformWidth = 5.0f;
 const float kPlatformHeight = 1.0f;
 
-
+// The engine object that houses everything pertaining to the game. Runs the
+// game logic, the rendering, the menu, and pretty much everything you can think
+// of that pertains to the game.
 class Engine {
+
 public:
 
   // Creates the game engine given the current screen width and height, in
@@ -107,7 +111,7 @@ public:
 
   // Tells the engine that the player has clicked at this location, meaning the
   // player should shoot in that direction. This location is given in pixels.
-  void Shoot(int x_px, int y_px);
+  void Click(int x_px, int y_px);
 
   // Returns a reference to the player object.
   Player& GetPlayer();
@@ -145,10 +149,10 @@ private:
   int screen_height_;
 
   // The conversion factor from meters to pixels, given the current resolution.
-  float32 m_to_px;
+  float32 m_to_px_;
 
   // The conversion factor from pixels to meters, given the current resolution.
-  float32 px_to_m;
+  float32 px_to_m_;
 
   // Whether or not the game engine is running.
   bool running_ = false;

@@ -5,6 +5,7 @@
 #include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
 #include <cinder/gl/draw.h>
+#include <cinder/app/Window.h>
 
 using std::vector;
 
@@ -17,7 +18,7 @@ namespace myapp {
   }
 
   void MyApp::setup() {
-    setFullScreen(kFullscreen);
+
   }
 
   void MyApp::update() {
@@ -46,7 +47,7 @@ namespace myapp {
 
   void MyApp::mouseDown(cinder::app::MouseEvent event) {
     if (event.isLeftDown()) {
-      engine_->Shoot(event.getX(), event.getY());
+      engine_->Click(event.getX(), event.getY());
     }
   }
 
