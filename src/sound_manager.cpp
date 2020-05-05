@@ -12,7 +12,7 @@ namespace mylibrary {
 //==============================================================================
 
 SoundManager::SoundManager() {
-
+  // Do nothing here.
 }
 
 SoundManager::SoundManager(bool load_assets) {
@@ -27,6 +27,7 @@ void SoundManager::SetVolume(float volume) {
     volume_ = volume;
   }
 
+  // Sets all sound's volume to the current volume.
   game_->setVolume(volume_);
   game_over_->setVolume(volume_);
   main_menu_->setVolume(volume_);
@@ -81,10 +82,16 @@ void SoundManager::StartNearMiss() {
 }
 
 void SoundManager::CheckLoops() {
+
+  // Checking main menu music loop.
   if (loop_main_menu_ && !main_menu_->isPlaying()) {
     StartMainMenuMusic(loop_main_menu_);
+
+  // Checking the game over music loop.
   } else if (loop_game_over_ && !game_over_->isPlaying()) {
     StartGameOverMusic(loop_game_over_);
+
+  // Checking the in-game music loop.
   } else if (loop_game_ && !game_->isPlaying()) {
     StartGameMusic(loop_game_);
   }
@@ -95,26 +102,33 @@ void SoundManager::CheckLoops() {
 //==============================================================================
 
 void SoundManager::LoadSounds() {
+
+  // In-game music loading.
   cinder::audio::SourceFileRef game_music = cinder::audio::load
       (cinder::app::loadAsset(kGameMusicPath));
   game_ = cinder::audio::Voice::create(game_music);
 
+  // Game over music loading.
   cinder::audio::SourceFileRef game_over_music = cinder::audio::load
       (cinder::app::loadAsset(kGameOverMusicPath));
   game_over_ = cinder::audio::Voice::create(game_over_music);
 
+  // Menu music loading.
   cinder::audio::SourceFileRef menu_music = cinder::audio::load
       (cinder::app::loadAsset(kMenuMusicPath));
   main_menu_ = cinder::audio::Voice::create(menu_music);
 
+  // Debris destroyed sound effect loading.
   cinder::audio::SourceFileRef debris_sound = cinder::audio::load
       (cinder::app::loadAsset(kDebrisSoundPath));
   debris_destroy_ = cinder::audio::Voice::create(debris_sound);
 
+  // Throwing sound loading.
   cinder::audio::SourceFileRef throw_sound = cinder::audio::load
       (cinder::app::loadAsset(kThrowSoundPath));
   bullet_shot_ = cinder::audio::Voice::create(throw_sound);
 
+  // Near miss sound loading.
   cinder::audio::SourceFileRef near_miss_sound = cinder::audio::load
       (cinder::app::loadAsset(kNearMissSoundPath));
   near_miss_ = cinder::audio::Voice::create(near_miss_sound);

@@ -36,6 +36,10 @@ const int kMoveSpeed = 12;
 const int kBulletLifetime = 2500;
 const float kNearMissDistance = 10;
 
+// Score calculations constants.
+const float kLogOffset = 1.1;
+const float kDebrisMultiplier = 2;
+
 // Asset paths
 const std::string kBackgroundImagePath = "images/bkgreen.png";
 const std::string kPlatformImagePath = "images/platform.png";
@@ -220,11 +224,11 @@ private:
   // platforms.
   void CreateBoundaries();
 
-  // Draws the hitboxes (the b2Body's) of all of the bodies in the world.
-  void DrawHitBoxes();
-
   // Draws the GUI of the game.
   void DrawGui();
+
+  // Draws the game over pop-up.
+  void DrawGameOver();
 
   // Draws the background texture.
   void DrawBackground();
