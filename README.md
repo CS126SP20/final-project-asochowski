@@ -44,7 +44,7 @@ directory. You may also change `kFullscreen` in `/apps/m_app.h` to change whethe
 | `R`          | Restart the current run.                     |
 | `A`          | Move left.                                   |
 | `D`          | Move right.                                  |
-| `SPACE`      | Jump (if grounded)                           |
+| `SPACE`      | Jump (if grounded).                          |
 
 ### Game Over Screen
 | Key   | Action                |
