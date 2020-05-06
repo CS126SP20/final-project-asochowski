@@ -33,6 +33,7 @@ mylibrary::Engine::Engine(int screen_width, int screen_height,
   CreateBoundaries();
   start_time_ = std::chrono::system_clock::now();
 
+  load_assets_ = load_assets;
   SoundManager sound_manager(load_assets);
   sound_manager_ = sound_manager;
 

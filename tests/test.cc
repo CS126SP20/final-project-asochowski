@@ -68,7 +68,7 @@ TEST_CASE("Bullet", "[bullet][player][engine]") {
   }
 
   SECTION("Shoot downwards moves player") {
-    engine.Shoot(640, 1000000);
+    engine.Click(640, 1000000);
     for (int i = 0; i < 5; i++) {
       engine.Step();
     }
@@ -76,7 +76,7 @@ TEST_CASE("Bullet", "[bullet][player][engine]") {
   }
 
   SECTION("Shoot sideways moves player") {
-    engine.Shoot(0, 720);
+    engine.Click(0, 720);
     for (int i = 0; i < 5; i++) {
       engine.Step();
     }
@@ -203,4 +203,80 @@ TEST_CASE("Score Calculation", "[engine]") {
     REQUIRE(engine.CalculateScore(random_1, random_2, random_3) ==
             (int) ((random_2 + random_1 * 2) * log(random_3 + 1.1)));
   }
+}
+
+TEST_CASE("Menu Navigation", "[engine]") {
+  Engine engine(1280, 720, false);
+
+  SECTION("Game starts on main menu") {
+    REQUIRE(!engine.IsRunning());
+  }
+
+  SECTION("Game runs on left click") {
+    engine.Click(0, 0);
+    REQUIRE(engine.IsRunning());
+  }
+
+  SECTION("Escape in-game goes to main menu") {
+    engine.Start();
+    engine.KeyPress(cinder::app::KeyEvent::KEY_ESCAPE);
+    engine.Step();
+    REQUIRE(!engine.IsRunning());
+  }
+
+}
+
+TEST_CASE("Reset Key", "[engine][player]") {
+  Engine engine(1280, 720, false);
+  Player& player = engine.GetPlayer();
+
+  SECTION("Reset doesn't work in main menu") {
+    REQUIRE(!engine.IsRunning());
+    engine.KeyPress(cinder::app::KeyEvent::KEY_r);
+    engine.Step();
+    REQUIRE(!engine.IsRunning());
+  }
+
+  SECTION("Reset works when player is alive") {
+    engine.Start();
+
+    // Move two seconds ahead.
+    for (int i = 0; i < 120; i++) {
+      engine.Step();
+    }
+
+    engine.KeyPress(cinder::app::KeyEvent::KEY_r);
+    engine.Step();
+
+    // Player is in correct position and alive (y value is a little more than 0
+    // because gravity is included in the step, which is needed to register the
+    // reset.
+    REQUIRE(player.GetBody()->GetPosition().x == 0);
+    REQUIRE(player.GetBody()->GetPosition().y <= 0.02);
+    REQUIRE(!engine.IsOver());
+  }
+
+  SECTION("Reset works when player is dead.") {
+    engine.Start();
+
+    // Move two seconds ahead.
+    for (int i = 0; i < 120; i++) {
+      engine.Step();
+    }
+
+    // Killing the player
+    engine.End();
+    REQUIRE(engine.IsOver());
+
+    engine.KeyPress(cinder::app::KeyEvent::KEY_r);
+    engine.Step();
+
+    // Player is in correct position and alive (y value is a little more than 0
+    // because gravity is included in the step, which is needed to register the
+    // reset.
+    REQUIRE(player.GetBody()->GetPosition().x == 0);
+    REQUIRE(player.GetBody()->GetPosition().y <= 0.02);
+    REQUIRE(!engine.IsOver());
+  }
+
 }

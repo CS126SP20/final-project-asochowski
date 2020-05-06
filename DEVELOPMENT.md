@@ -41,4 +41,5 @@ decided I will not be adding different GUI elements, as the current ones match t
 they hit ESC while in the title screen, the program terminates.
 - **5/4/20**: Changed the font to fit with this project's aesthetic, changed the image loading method so that it accepts
 the relative path of the image and not the absolute path, added content to the README.md file.
-- **5/5/20**: Removed functions that were no longer in use,
+- **5/5/20**: Removed a few functions that were no longer in use.
+- **5/6/20**: Added test cases for the newly added menu navigation feature and the reset button.

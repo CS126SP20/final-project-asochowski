@@ -57,7 +57,7 @@ Bullet::Bullet(b2World* world, const b2Vec2& player_pos,
 }
 
 Bullet::Bullet() {
-
+  // Do nothing.
 }
 
 Bullet::~Bullet() {
